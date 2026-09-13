@@ -26,6 +26,13 @@
 accepted:
   # --- HIGH: subprocess wrappers that MUST shell out to gh/git ---
   - id: OH1
+    file: agile-github-breakdown/scripts/create_github_breakdown.py
+    reason: >-
+      "Unvalidated Output Injection" on subprocess.run wrappers. Inputs are CLI flags
+      and git/gh output passed as a list (shell=False) — no shell, SQL, or HTML sink,
+      so there is no injection path. Calling gh/git is the skill's entire purpose;
+      removing subprocess breaks it. Hardened with an explicit shell=False comment.
+  - id: OH1
     file: agile-github-task-from-diff/scripts/create_github_task_from_diff.py
     reason: >-
       "Unvalidated Output Injection" on subprocess.run wrappers. Inputs are CLI flags
@@ -50,6 +57,18 @@ accepted:
       safeguard; deleting it removes the safety documentation. Not an executed command.
 
   # --- MEDIUM: subprocess module presence (same lines as OH1) ---
+  - id: AST4
+    file: agile-github-breakdown/scripts/create_github_breakdown.py
+    reason: >-
+      "subprocess module call" — same wrappers as OH1. subprocess is required to invoke
+      gh/git; calls use shell=False with an explicit argument list, so there is no shell
+      interpolation of untrusted input.
+  - id: AST4
+    file: agile-github-breakdown/scripts/test_skill_scripts.py
+    reason: >-
+      "subprocess module call" — stdlib unittest helper runs the sibling parse/validate
+      scripts via sys.executable with a fixed argv list (shell=False). No user input
+      reaches the command; removing subprocess would gut the exit-code contract tests.
   - id: AST4
     file: agile-github-task-from-diff/scripts/create_github_task_from_diff.py
     reason: >-

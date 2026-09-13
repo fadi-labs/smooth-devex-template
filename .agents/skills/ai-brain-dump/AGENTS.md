@@ -18,3 +18,4 @@ Pure-prompt behavioral skill (no scripts): a listen-first capture session whose 
 | Date | Change | Ref |
 |:-----|:-------|:----|
 | 2026-06-12 | Initial version. | |
+| 2026-09-13 | Added `--all` (enables `--oktoask` `--thinking` `--oktoreaddocs` `--oktowebsearch`). | |

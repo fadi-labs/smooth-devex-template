@@ -33,6 +33,7 @@
       "Bash(git diff:*)",
       "Bash(git pull:*)",
       "Bash(git reset:*)",
+      "Skill(agile-github-breakdown)",
       "Skill(agile-github-task-from-diff)",
       "Skill(ai-brain-dump)",
       "Skill(ai-terse)",

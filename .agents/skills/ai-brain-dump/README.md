@@ -71,8 +71,9 @@ bloat the default was built to avoid.
 | `--thinking` (liberal questioning) | **Moderate** | More questions → more round-trips → more turns re-billing context. Bounded by conversation length. |
 | `--oktoreaddocs` | **Large** | Reintroduces exactly what the skill avoids: file/code dumps injected into context and re-sent on every subsequent turn. The heaviest lever. |
 | `--oktowebsearch` | **Large** | Web-search result payloads are big and likewise re-billed each turn. |
+| `--all` | **Large** | Turns on every other switch, including both tool switches. Same cost class as `--oktoreaddocs` + `--oktowebsearch`. |
 | Conclusion liberal Q&A | **Small, one-time** | A single bounded burst before synthesis; often *net-negative* cost because it prevents a wrong-synthesis + rework loop. |
 
 **Bottom line:** `--oktoask` and `--thinking` cost little and can pay for themselves by catching
-misunderstandings before synthesis. `--oktoreaddocs` and `--oktowebsearch` re-enable the skill's
+misunderstandings before synthesis. `--oktoreaddocs`, `--oktowebsearch`, and `--all` re-enable the skill's
 *primary* savings as a cost — use them deliberately, not by default.

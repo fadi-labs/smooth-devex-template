@@ -8,8 +8,9 @@ Skills live **flat**, one directory per skill directly under `.agents/skills/`. 
 
 | Skill | Purpose | Usage |
 |-------|---------|-------|
+| **agile-github-breakdown** | Turn a braindump or existing Feature into GitHub Feature + Task issues | `/agile-github-breakdown` |
 | **agile-github-task-from-diff** | Create a GitHub Task (sub-issue) from the current git diff vs main | `/agile-github-task-from-diff` |
-| **ai-brain-dump** | Listen-first capture session; synthesize on request | `/ai-brain-dump [--oktoask] [--thinking] [--oktoreaddocs] [--oktowebsearch]` |
+| **ai-brain-dump** | Listen-first capture session; synthesize on request | `/ai-brain-dump [--oktoask] [--thinking] [--oktoreaddocs] [--oktowebsearch] [--all]` |
 | **ai-terse** | Reformat this turn's reply into terse, high-density output with a TL;DR | `/ai-terse` |
 | **ai-template-sync** | UPSERT smooth-devex-template scaffold into an existing repo | `/ai-template-sync` |
 | **context-load-agents-context** | Load ancestor AGENTS.md context for a file | `/context-load-agents-context` |
@@ -33,6 +34,7 @@ Opt-in switches relax that, at different token costs (see `ai-brain-dump/README.
 | `--thinking` | Make questioning liberal (ask on any unclear/detail gap); implies `--oktoask` | moderate |
 | `--oktoreaddocs` | May read local code/docs to ground a question; implies `--oktoask` | large |
 | `--oktowebsearch` | May web-search to ground a question; implies `--oktoask` | large |
+| `--all` | Enable every other switch (`--oktoask` `--thinking` `--oktoreaddocs` `--oktowebsearch`) | large |
 
 The tool switches (`--oktoreaddocs`, `--oktowebsearch`) re-enable the file/web payload bloat the
 listen-first default avoids — use deliberately.
@@ -68,6 +70,7 @@ Skills are classified by complexity tier. Each SKILL.md carries a `models` front
 | **git-sync** | low | Fetch + merge; straightforward git operations |
 | **git-commit-push** | medium | Branch rename logic + upstream tracking |
 | **git-commit-push-pr** | medium | PR template authoring + state management |
+| **agile-github-breakdown** | high | Multi-turn FR/NFR → Task graph + GitHub writes |
 | **agile-github-task-from-diff** | medium | Diff classification + issue authoring |
 | **manage-rule-system** | medium | Cross-tool frontmatter authoring |
 | **ai-terse** | low | Single-turn reply reformatting; no tools or deep reasoning |
@@ -88,7 +91,7 @@ Skills are flat under `.agents/skills/`; the category lives in the folder-name p
 
 | Prefix | Skills |
 |--------|--------|
-| `agile-` | `agile-github-task-from-diff` |
+| `agile-` | `agile-github-breakdown`, `agile-github-task-from-diff` |
 | `ai-` | `ai-brain-dump`, `ai-terse`, `ai-template-sync` |
 | `context-` | `context-load-agents-context`, `context-load-context` |
 | `git-` | `git-commit`, `git-commit-push`, `git-commit-push-pr`, `git-sync` |

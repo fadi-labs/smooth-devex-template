@@ -39,8 +39,10 @@
   </Folder>
   <Folder Name="/.agents/rules/">
     <File Path=".agents/rules/ai-workflow-rules.instructions.md" />
+    <File Path=".agents/rules/clean-code.instructions.md" />
     <File Path=".agents/rules/code-review-standards.instructions.md" />
     <File Path=".agents/rules/project-overview.instructions.md" />
+    <File Path=".agents/rules/solid-principles.instructions.md" />
   </Folder>
   <Folder Name="/.agents/rules/backend/">
     <File Path=".agents/rules/backend/api-mediator-validation.instructions.md" />
@@ -48,6 +50,7 @@
     <File Path=".agents/rules/backend/backend-logging-conventions.instructions.md" />
     <File Path=".agents/rules/backend/external-api-clients.instructions.md" />
     <File Path=".agents/rules/backend/migrations.instructions.md" />
+    <File Path=".agents/rules/backend/readonly-collections.instructions.md" />
     <File Path=".agents/rules/backend/wiremock-stubbing.instructions.md" />
   </Folder>
   <Folder Name="/.agents/rules/git/">
@@ -66,6 +69,13 @@
   </Folder>
   <Folder Name="/.agents/skills/">
     <File Path=".agents/skills/README.md" />
+  </Folder>
+  <Folder Name="/.agents/skills/agile-github-breakdown/">
+    <File Path=".agents/skills/agile-github-breakdown/SKILL.md" />
+    <File Path=".agents/skills/agile-github-breakdown/agents/openai.yaml" />
+    <File Path=".agents/skills/agile-github-breakdown/scripts/create_github_breakdown.py" />
+    <File Path=".agents/skills/agile-github-breakdown/scripts/parse_frnfr.py" />
+    <File Path=".agents/skills/agile-github-breakdown/scripts/validate_story_graph.py" />
   </Folder>
   <Folder Name="/.agents/skills/agile-github-task-from-diff/">
     <File Path=".agents/skills/agile-github-task-from-diff/SKILL.md" />

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Create Feature + Tasks"
+  short_description: "Turn a braindump or existing Feature into terse, dependency-graphed GitHub Tasks"
+  default_prompt: "Turn this requirements source into GitHub Feature + Task issues: clarify scope, structure the dependency graph, translate every FR/NFR into acceptance criteria, phrase any tech mention as a soft example, include the Translation (AI context) table on every body, preview before writing, then create/update via gh on go-ahead."
+  model: gpt-5.5

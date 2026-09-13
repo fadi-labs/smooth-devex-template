@@ -21,14 +21,16 @@ capture: no questions, no tools, no synthesis until asked.
 | `--thinking` | Make questioning **liberal** during Listen — ask whenever something is unclear, including detail gaps. Implies `--oktoask`. |
 | `--oktoreaddocs` | Permit reading local code/docs to ground a question (promotes the Phase 3 "Compare" tools into the Listen phase on demand). Implies `--oktoask`. |
 | `--oktowebsearch` | Permit web search to ground a question or fill a gap. Implies `--oktoask`. |
+| `--all` | Enable every other switch: `--oktoask`, `--thinking`, `--oktoreaddocs`, `--oktowebsearch`. |
 
 **Implication rule:** `--thinking`, `--oktoreaddocs`, and `--oktowebsearch` each imply `--oktoask`. If any
-of them is passed without `--oktoask`, treat `--oktoask` as on.
+of them is passed without `--oktoask`, treat `--oktoask` as on. `--all` turns all four on; `--thinking`
+wins over sparse `--oktoask` for Listen cadence.
 
 **Cost note:** `--oktoask` and `--thinking` are cheap — they add conversational turns, not tool-result
 bloat. `--oktoreaddocs` and `--oktowebsearch` are expensive — they re-enable the file/web payloads that
 get injected into context and re-billed every turn, which is the very cost the listen-first default avoids.
-Use the tool switches deliberately.
+`--all` is expensive because it includes both tool switches. Use the tool switches (and `--all`) deliberately.
 
 ## Core Posture
 
@@ -71,14 +73,14 @@ Questioning during Listen depends on the active switches (see Modes & Switches):
 - **`--oktoask` (sparse):** Ask only when an item is a genuine blocker or internally contradictory in a way
   that would corrupt capture. Keep to 1–2 questions, non-blocking — invite the user to keep dumping and
   answer when convenient. Stay tool-free.
-- **`--thinking` (liberal):** Ask whenever something is unclear, including detail and wording gaps. Still
-  non-blocking; still batch related questions rather than dripping one per item.
+- **`--thinking` / `--all` (liberal):** Ask whenever something is unclear, including detail and wording gaps.
+  Still non-blocking; still batch related questions rather than dripping one per item.
 
 Browsing/tools during Listen:
 
 - **Default / `--oktoask` / `--thinking`:** tool-free — do not browse, inspect code, or use external tools.
-- **`--oktoreaddocs`:** you may read local code/docs to ground a question or confirm a reference.
-- **`--oktowebsearch`:** you may run a web search to ground a question or fill a gap.
+- **`--oktoreaddocs` / `--all`:** you may read local code/docs to ground a question or confirm a reference.
+- **`--oktowebsearch` / `--all`:** you may run a web search to ground a question or fill a gap.
 - Even with tool switches on, grounding is the only thing widened — do not synthesize or modify anything
   during Listen.
 
@@ -153,7 +155,7 @@ Do not expose the whole capture every turn. Surface it when the user asks to fin
 - In `--oktoask` (sparse) mode, do not nitpick wording or ask about details that later messages will
   likely clarify — sparse means blockers only. (`--thinking` relaxes this to allow detail/wording gaps.)
 - Batch related questions into one message; do not drip a question after every dumped item.
-- A questioning switch is not permission to act. `--oktoreaddocs` / `--oktowebsearch` widen *grounding*
+- A questioning switch is not permission to act. `--oktoreaddocs` / `--oktowebsearch` / `--all` widen *grounding*
   only; the no-implement, no-modify rule still holds until the user explicitly asks to synthesize or update.
 
 ## Finalization Output
