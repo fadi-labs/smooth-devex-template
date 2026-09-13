@@ -1,0 +1,13 @@
+# AI asset sync manifest (dependabot analog for skills/rules).
+# Schema: scripts/lib/parse_manifest.py — keep this subset; do not nest maps.
+#
+# Each source is owner/repo@ref:path. Remote path == local path (no rename).
+# strategy: ai-merge (default) | overwrite
+#
+# See .docs/wiki/ai-asset-sync.md and .docs/examples/ai-asset-sync-caller.yml.
+version: 1
+entries: []
+# Example:
+#   - source: generic-automation-and-it/smooth-devex-template@main:.agents/skills/ai-brain-dump
+#   - source: generic-automation-and-it/smooth-devex-template@main:.github/instructions/git
+#     strategy: overwrite

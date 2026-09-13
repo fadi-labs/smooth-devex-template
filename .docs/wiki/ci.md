@@ -34,6 +34,10 @@ The pipeline is a PR gate that builds and tests every change before it can merge
 
 Accepted: `MAJOR.MINOR.PATCH` with optional `-prerelease` and `+build`, no leading `v` (e.g. `1.0.0`, `1.0.0-rc.1`, `1.2.3-alpha.1+build.7`). Rejected: `v1.0.0`, `1.0`, `latest`, empty.
 
+## AI asset sync
+
+Reusable workflow `.github/workflows/pipeline-ai-asset-sync.yml` (`workflow_call` + `workflow_dispatch` only — no push/pull_request). Composite action `.github/actions/ai-asset-sync`. Consumer example: `.docs/examples/ai-asset-sync-caller.yml`. See [AI Asset Sync](ai-asset-sync.md).
+
 ## .NET local tools
 
 `.config/dotnet-tools.json` declares the local tool manifest, restored in CI (and locally) with `dotnet tool restore`:

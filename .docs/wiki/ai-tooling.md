@@ -43,6 +43,10 @@ bash .agents/setup/scripts/agents-setup.sh
 .\.agents\setup\scripts\agents-setup.ps1
 ```
 
+## AI asset sync
+
+Scheduled OpenCode reconciler for skills/rules. Consumer manifest `.github/assets/ai-sync.yml`, reusable workflow + composite action, skill entrypoint `.agents/skills/ai-asset-sync/scripts/run-sync.sh`. See [AI Asset Sync](ai-asset-sync.md).
+
 ## Further Reading
 
 - [Architecture](architecture.md) — solution structure and design decisions

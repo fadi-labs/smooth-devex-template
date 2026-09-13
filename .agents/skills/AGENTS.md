@@ -6,7 +6,7 @@ First-party AI agent skills. They legitimately run shell, `gh`/`git`, and templa
 
 ## Non-Negotiables
 
-- **Secrets go through the environment, never into text.** Any skill needing a secret MUST follow `.github/instructions/skill-secret-handling.instructions.md`: a script reads the value from a runtime environment variable; the value never appears in `SKILL.md`, prompts, agent YAML, README, or any committed file. No skill handles a real secret today.
+- **Secrets go through the environment, never into text.** Any skill needing a secret MUST follow `.github/instructions/skills/skill-secret-handling.instructions.md`: a script reads the value from a runtime environment variable; the value never appears in `SKILL.md`, prompts, agent YAML, README, or any committed file. First secret consumer: `ai-asset-sync` reads `OPENCODE_<PROVIDER>_API_KEY` and `GITHUB_TOKEN` from the runtime environment only (opencode `{env:…}` placeholders + `gh` env auth) — the compliant reference implementation.
 - **Never silence a SkillSpector finding by removing a skill's capability.** If the flagged behavior is the skill's actual job (shell out to `gh`, swap a symlink, refresh a template dir), keep it and add a justified entry to `.github/skillspector-baseline.yml`. A green gate bought by gutting a skill is a failure.
 - **Every baseline entry needs a written `reason`.** The allowlist is auditable, not a blanket mute. A new finding id, or the same id in a new file, is not baselined and blocks the PR until reviewed.
 
@@ -33,4 +33,5 @@ First-party AI agent skills. They legitimately run shell, `gh`/`git`, and templa
 |:-----|:-------|:----|
 | 2026-06-21 | Initial version — documents the SkillSpector baseline gate contract and the secret-handling guardrail for skills. | #52 |
 | 2026-06-21 | LADR-001: gate on the deterministic static scan; LLM semantic stage runs as a non-blocking advisory (policy A). Resolves the static-vs-LLM baseline mismatch that failed the gate on run 27907080342. | #52 |
+| 2026-09-13 | `ai-asset-sync` becomes the first skill consuming secrets (env-only: provider API key + `GITHUB_TOKEN`); status text updated from "no skill handles a real secret". | #66 |
 | 2026-07-31 | SARIF now **omits** baselined findings instead of marking them `suppressions`; the code-scanning check was red because the back end did not honor SARIF suppressions. Summary "Accepted (baselined)" section is unchanged (reads the scan output). | |

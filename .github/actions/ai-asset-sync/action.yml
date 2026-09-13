@@ -1,0 +1,81 @@
+name: AI asset sync
+description: Install OpenCode CLI, run ai-asset-sync, and open a chore PR when AI assets differ from upstream.
+
+# Direct-use env contract (composite actions do NOT see repo/org vars or
+# secrets automatically — the CALLING job must map them as env):
+#
+#   env:
+#     OPENCODE_AI_SYNC_PROVIDER: ${{ vars.OPENCODE_AI_SYNC_PROVIDER || 'GEMINI' }}
+#     OPENCODE_AI_SYNC_MODEL_PRIMARY: ${{ vars.OPENCODE_AI_SYNC_MODEL_PRIMARY || '' }}
+#     OPENCODE_AI_SYNC_MODEL_SECONDARY: ${{ vars.OPENCODE_AI_SYNC_MODEL_SECONDARY || '' }}
+#     OPENCODE_AI_SYNC_CONFIG: ${{ vars.OPENCODE_AI_SYNC_CONFIG || '' }}
+#     OPENCODE_CLI_VERSION: ${{ vars.OPENCODE_CLI_VERSION || '' }}
+#     OPENCODE_<PROVIDER>_API_KEY: ${{ secrets.OPENCODE_<PROVIDER>_API_KEY }}
+#
+# Only the selected provider's key is read. Without these mappings the run
+# defaults to GEMINI and dies on the missing-key check. The reusable workflow
+# (pipeline-ai-asset-sync.yml) maps all of this for you — prefer it.
+
+inputs:
+  manifest_path:
+    description: Path to the YAML manifest in the consumer repo.
+    required: false
+    default: .github/assets/ai-sync.yml
+  dry_run:
+    description: If true, analyse and write the run summary but do not open a PR.
+    required: false
+    default: "false"
+  model:
+    description: Override OPENCODE_AI_SYNC_MODEL_PRIMARY for this run.
+    required: false
+    default: ""
+  entries_filter:
+    description: Comma or newline-separated substring filter on source/path.
+    required: false
+    default: ""
+  pr_title:
+    description: 'PR title/commit subject. Blank → chore[NO-TICKET]: sync AI assets.'
+    required: false
+    default: ""
+  tools_path:
+    description: Checkout path of smooth-devex-template when the skill is not in the consumer repo.
+    required: false
+    default: .smooth-devex-template
+
+runs:
+  using: composite
+  steps:
+    - name: Run AI asset sync
+      shell: bash
+      env:
+        AI_ASSET_SYNC_MANIFEST: ${{ inputs.manifest_path }}
+        AI_ASSET_SYNC_ENTRIES_FILTER: ${{ inputs.entries_filter }}
+        AI_ASSET_SYNC_MODEL: ${{ inputs.model }}
+        AI_ASSET_SYNC_DRY_RUN: ${{ inputs.dry_run }}
+        AI_ASSET_SYNC_PR_TITLE: ${{ inputs.pr_title }}
+        TOOLS_PATH: ${{ inputs.tools_path }}
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        set -euo pipefail
+        extra=()
+        case "${AI_ASSET_SYNC_DRY_RUN}" in
+          true|TRUE|1|yes|YES|on|ON) extra+=(--dry-run) ;;
+        esac
+        if [ -n "${AI_ASSET_SYNC_MODEL}" ]; then
+          extra+=(--model "${AI_ASSET_SYNC_MODEL}")
+        fi
+        if [ -n "${AI_ASSET_SYNC_ENTRIES_FILTER}" ]; then
+          extra+=(--entries-filter "${AI_ASSET_SYNC_ENTRIES_FILTER}")
+        fi
+        if [ -f ".agents/skills/ai-asset-sync/scripts/run-sync.sh" ]; then
+          bash .agents/skills/ai-asset-sync/scripts/run-sync.sh \
+            --manifest "${AI_ASSET_SYNC_MANIFEST}" \
+            "${extra[@]}"
+        elif [ -f "${TOOLS_PATH}/.agents/skills/ai-asset-sync/scripts/run-sync.sh" ]; then
+          bash "${TOOLS_PATH}/.agents/skills/ai-asset-sync/scripts/run-sync.sh" \
+            --manifest "${AI_ASSET_SYNC_MANIFEST}" \
+            "${extra[@]}"
+        else
+          echo "ai-asset-sync skill not found in-repo or at ${TOOLS_PATH}" >&2
+          exit 1
+        fi

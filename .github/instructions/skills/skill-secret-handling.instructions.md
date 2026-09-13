@@ -29,7 +29,7 @@ The secret value flows: **runtime environment → script → tool**. It is never
 
 ## Current Status
 
-**No skill handles a real secret today.** The only SkillSpector "data exfiltration / context leakage" signal ever raised on this tree was a false positive on a natural-language prompt phrase (no secret value, no external send), since reworded. This rule is a **standing guardrail** so that if a future skill needs a secret, it is added the safe way — and so the SkillSpector gate's exfiltration detection stays meaningful rather than being trained to ignore real leaks.
+**One skill handles real secrets today:** `ai-asset-sync` (env-only — `OPENCODE_<PROVIDER>_API_KEY` via opencode `{env:…}` placeholders, `GITHUB_TOKEN` via `gh` env auth; no value ever appears in committed text or prompts). The only SkillSpector "data exfiltration / context leakage" signal ever raised on this tree was a false positive on a natural-language prompt phrase (no secret value, no external send), since reworded. This rule is a **standing guardrail** so that if a future skill needs a secret, it is added the safe way — and so the SkillSpector gate's exfiltration detection stays meaningful rather than being trained to ignore real leaks.
 
 ## Changelog
 
@@ -37,4 +37,5 @@ The secret value flows: **runtime environment → script → tool**. It is never
 
 | Date | Change |
 |:-----|:-------|
+| 2026-09-13 | Moved into the new `skills/` rule category (with `skillspector-pre-pr`); cross-references updated. |
 | 2026-06-21 | Initial version — env-via-script secret handling for skills; mirrors the skill-scan workflow's key handling. |

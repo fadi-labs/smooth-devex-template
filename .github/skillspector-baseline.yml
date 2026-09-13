@@ -21,7 +21,7 @@
 # here — they are reported in the job summary for human review. See .agents/skills/AGENTS.md.
 #
 # NOTE: No real secret leakage exists in any skill today. The standing guardrail for
-# any future secret handling is .github/instructions/skill-secret-handling.instructions.md.
+# any future secret handling is .github/instructions/skills/skill-secret-handling.instructions.md.
 
 accepted:
   # --- HIGH: subprocess wrappers that MUST shell out to gh/git ---
@@ -39,6 +39,51 @@ accepted:
       and git/gh output passed as a list (shell=False) — no shell, SQL, or HTML sink,
       so there is no injection path. Calling gh/git is the skill's entire purpose;
       removing subprocess breaks it. Hardened with an explicit shell=False comment.
+
+  # --- HIGH: ai-asset-sync OpenCode CLI installer (curl | bash) ---
+  - id: SC2
+    file: ai-asset-sync/scripts/lib/install-opencode.sh
+    reason: >-
+      "External Script Fetching" / curl|bash on the official OpenCode installer
+      (`curl -fsSL https://opencode.ai/install | bash`) — previously flagged
+      TM1 "Tool Parameter Abuse"; the pinned SkillSpector now categorizes it
+      SC2. Same install contract as smooth-ai-report-review LADR-048: a single
+      lib honours OPENCODE_CLI_VERSION, verifies the binary, and refuses a
+      version mismatch. The URL is fixed, not user-controlled. Removing the
+      pipe breaks CI OpenCode install.
+
+  # --- HIGH: ai-asset-sync parse_manifest negative-path test asserting /etc/passwd rejection ---
+  - id: PE3
+    file: ai-asset-sync/scripts/lib/test_parse_manifest.py
+    reason: >-
+      "Credential Access" on the literal `/etc/passwd` in `test_rejects_absolute`
+      — a unit test asserting `parse_source` REJECTS an absolute-path source.
+      The string is a hostile negative test case that is parsed and refused; no
+      credential is read, written, or exfiltrated. Removing it weakens the
+      injection-surface test.
+
+  # --- HIGH: ai-asset-sync entrypoint replace-then-copy chain ---
+  - id: TM2
+    file: ai-asset-sync/scripts/run-sync.sh
+    reason: >-
+      "Chaining Abuse" on the resolve→fetch→replace(`rm -rf`)→copy chain in the
+      overwrite/absent-local path. Replacing the local asset with the upstream
+      snapshot IS the sync's function (type-change-safe overwrite, added for
+      PR #66 review). The target path is constrained: strict manifest charset
+      validation (no `..`, no `.`/`.git`/workflow destinations, no absolute/`~`
+      paths), symlink-physical resolution that dies outside the repo root, and
+      a pre-flight clean-tree guard so only committed (git-recoverable) state
+      is ever replaced. Removing the rm reintroduces the file↔directory
+      type-change bug.
+
+  # --- HIGH: ai-asset-sync AGENTS.md LADR safety documentation ---
+  - id: TM1
+    file: ai-asset-sync/AGENTS.md
+    reason: >-
+      "Tool Parameter Abuse" on the literal `rm` in the LADR-003 consequences
+      note ("cannot `rm` or push"). Documentation of the security property the
+      `sync` agent denies, not an executed command. Same doc-only shape as the
+      accepted ai-template-sync/SKILL.md TM1 entry.
 
   # --- HIGH: ai-template-sync rm of the rules symlink + instructions refresh ---
   - id: TM1

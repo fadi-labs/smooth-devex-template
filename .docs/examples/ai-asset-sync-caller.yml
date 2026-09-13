@@ -1,0 +1,83 @@
+# Thin caller for the smooth-devex-template AI asset sync reusable workflow.
+#
+# Copy this file into your repo as .github/workflows/pipeline-ai-asset-sync.yml
+# (any name works). Pair it with .github/assets/ai-sync.yml listing
+# owner/repo@ref:path entries to keep in sync.
+#
+# Configuration (set in YOUR repo/org):
+#   Secrets   — the selected provider's API key, canonical names:
+#               OPENCODE_GEMINI_API_KEY / OPENCODE_COPILOT_API_KEY /
+#               OPENCODE_OPENAI_API_KEY / OPENCODE_ANTHROPIC_API_KEY /
+#               OPENCODE_GO_OPENAI_API_KEY / OPENCODE_GO_ANTHROPIC_API_KEY /
+#               OPENCODE_OPENROUTER_API_KEY.
+#               The explicit `secrets:` mapping below works same-org AND
+#               cross-org. `secrets: inherit` is a same-org/enterprise shortcut
+#               only — GitHub rejects cross-org inherit at startup.
+#   Variables — OPENCODE_AI_SYNC_PROVIDER (default GEMINI),
+#               OPENCODE_AI_SYNC_MODEL_PRIMARY / _SECONDARY,
+#               OPENCODE_CLI_VERSION (pin the CLI; unset = latest),
+#               optional OPENCODE_AI_SYNC_CONFIG (custom opencode.json path;
+#               must keep {env:OPENCODE_*} placeholders).
+#
+# Pin the reusable workflow @ a SHA for supply-chain control, or @main/@v1.
+# Scripts are fetched at github.job_workflow_sha of that workflow file unless
+# you set tools_ref / SMOOTH_DEVEX_TOOLS_REF.
+#
+# Limitation: the sync PR is opened with GITHUB_TOKEN, so downstream
+# pull_request workflows (your PR gate) will not run on it. Re-run checks
+# after review if needed.
+
+name: AI Asset Sync
+
+on:
+  schedule:
+    # Weekly Monday 06:00 UTC — adjust to taste.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      model:
+        description: Primary model ID override (optional).
+        required: false
+        type: string
+        default: ""
+      dry_run:
+        description: Analyse + summary, no PR.
+        required: false
+        type: boolean
+        default: false
+      entries_filter:
+        description: Comma-separated substring filter on source/path.
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ai-asset-sync-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    uses: generic-automation-and-it/smooth-devex-template/.github/workflows/pipeline-ai-asset-sync.yml@main
+    with:
+      manifest_path: .github/assets/ai-sync.yml
+      model: ${{ inputs.model || '' }}
+      dry_run: ${{ inputs.dry_run || false }}
+      entries_filter: ${{ inputs.entries_filter || '' }}
+      # pr_title: 'chore: sync AI assets'   # override the default chore[NO-TICKET] title convention
+      # runner: self-hosted
+      # tools_ref: <sha>   # pin the skill checkout; default = workflow file commit
+    # Explicit mapping works for same-org AND cross-org callers. Only the
+    # selected provider's key needs to exist; unset ones resolve empty.
+    # Same-org callers may replace this block with `secrets: inherit`.
+    secrets:
+      OPENCODE_GEMINI_API_KEY: ${{ secrets.OPENCODE_GEMINI_API_KEY }}
+      OPENCODE_COPILOT_API_KEY: ${{ secrets.OPENCODE_COPILOT_API_KEY }}
+      OPENCODE_OPENAI_API_KEY: ${{ secrets.OPENCODE_OPENAI_API_KEY }}
+      OPENCODE_ANTHROPIC_API_KEY: ${{ secrets.OPENCODE_ANTHROPIC_API_KEY }}
+      OPENCODE_GO_OPENAI_API_KEY: ${{ secrets.OPENCODE_GO_OPENAI_API_KEY }}
+      OPENCODE_GO_ANTHROPIC_API_KEY: ${{ secrets.OPENCODE_GO_ANTHROPIC_API_KEY }}
+      OPENCODE_OPENROUTER_API_KEY: ${{ secrets.OPENCODE_OPENROUTER_API_KEY }}

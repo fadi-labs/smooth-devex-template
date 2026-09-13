@@ -1,0 +1,208 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "gemini": {
+      "npm": "@ai-sdk/google",
+      "name": "Gemini",
+      "options": {
+        "apiKey": "{env:OPENCODE_GEMINI_API_KEY}"
+      },
+      "models": {
+        "gemini-3.1-pro-preview": {
+          "name": "Gemini 3.1 Pro (preview)"
+        },
+        "gemini-2.5-pro": {
+          "name": "Gemini 2.5 Pro"
+        },
+        "gemini-3-flash-preview": {
+          "name": "Gemini 3 Flash (preview)"
+        },
+        "gemini-2.5-flash": {
+          "name": "Gemini 2.5 Flash"
+        }
+      }
+    },
+    "github-copilot": {
+      "npm": "@ai-sdk/github-copilot",
+      "name": "GitHub Copilot",
+      "options": {
+        "apiKey": "{env:OPENCODE_COPILOT_API_KEY}"
+      },
+      "models": {
+        "gpt-5.5": {
+          "name": "GPT-5.5"
+        },
+        "gpt-5.4": {
+          "name": "GPT-5.4"
+        },
+        "gpt-5.4-mini": {
+          "name": "GPT-5.4 mini"
+        }
+      }
+    },
+    "openai": {
+      "npm": "@ai-sdk/openai",
+      "name": "OpenAI",
+      "options": {
+        "apiKey": "{env:OPENCODE_OPENAI_API_KEY}"
+      },
+      "models": {
+        "gpt-5.5": {
+          "name": "GPT-5.5"
+        },
+        "gpt-5.4": {
+          "name": "GPT-5.4"
+        },
+        "gpt-5.4-mini": {
+          "name": "GPT-5.4 mini"
+        }
+      }
+    },
+    "anthropic": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "Anthropic",
+      "options": {
+        "baseURL": "https://api.anthropic.com",
+        "apiKey": "{env:OPENCODE_ANTHROPIC_API_KEY}"
+      },
+      "models": {
+        "claude-opus-4-8": {
+          "name": "Claude Opus 4.8"
+        },
+        "claude-sonnet-4-6": {
+          "name": "Claude Sonnet 4.6"
+        },
+        "claude-haiku-4-5": {
+          "name": "Claude Haiku 4.5"
+        }
+      }
+    },
+    "go-openai": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OpenCode Go (OpenAI-compatible)",
+      "options": {
+        "baseURL": "https://opencode.ai/zen/go/v1",
+        "apiKey": "{env:OPENCODE_GO_OPENAI_API_KEY}"
+      },
+      "models": {
+        "grok-4.5": {
+          "name": "Grok 4.5"
+        },
+        "glm-5.2": {
+          "name": "GLM-5.2"
+        },
+        "glm-5.1": {
+          "name": "GLM-5.1"
+        },
+        "kimi-k3": {
+          "name": "Kimi K3"
+        },
+        "kimi-k2.7-code": {
+          "name": "Kimi K2.7 Code"
+        },
+        "kimi-k2.6": {
+          "name": "Kimi K2.6"
+        },
+        "deepseek-v4-pro": {
+          "name": "DeepSeek V4 Pro"
+        },
+        "deepseek-v4-flash": {
+          "name": "DeepSeek V4 Flash"
+        },
+        "mimo-v2.5": {
+          "name": "MiMo V2.5"
+        },
+        "mimo-v2.5-pro": {
+          "name": "MiMo V2.5 Pro"
+        },
+        "hy3": {
+          "name": "Hy3"
+        }
+      }
+    },
+    "go-anthropic": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "OpenCode Go (Anthropic-compatible)",
+      "options": {
+        "baseURL": "https://opencode.ai/zen/go/v1",
+        "apiKey": "{env:OPENCODE_GO_ANTHROPIC_API_KEY}"
+      },
+      "models": {
+        "minimax-m3": {
+          "name": "MiniMax M3"
+        },
+        "minimax-m2.7": {
+          "name": "MiniMax M2.7"
+        },
+        "minimax-m2.5": {
+          "name": "MiniMax M2.5"
+        },
+        "qwen3.8-max": {
+          "name": "Qwen3.8 Max"
+        },
+        "qwen3.7-max": {
+          "name": "Qwen3.7 Max"
+        },
+        "qwen3.7-plus": {
+          "name": "Qwen3.7 Plus"
+        },
+        "qwen3.6-plus": {
+          "name": "Qwen3.6 Plus"
+        }
+      }
+    },
+    "openrouter": {
+      "npm": "@openrouter/ai-sdk-provider",
+      "name": "OpenRouter",
+      "options": {
+        "baseURL": "https://openrouter.ai/api/v1",
+        "apiKey": "{env:OPENCODE_OPENROUTER_API_KEY}"
+      },
+      "models": {
+        "deepseek/deepseek-v4-pro": {
+          "name": "DeepSeek V4 Pro"
+        },
+        "qwen/qwen3.7-plus": {
+          "name": "Qwen3.7 Plus"
+        },
+        "z-ai/glm-5.1": {
+          "name": "GLM-5.1"
+        },
+        "minimax/minimax-m3": {
+          "name": "MiniMax M3"
+        }
+      }
+    }
+  },
+  "share": "disabled",
+  "permission": {
+    "external_directory": "deny"
+  },
+  "agent": {
+    "sync": {
+      "mode": "primary",
+      "description": "AI-DevEx asset merge agent: edit inside the repo root only (upstream snapshot is staged into an in-repo scratch dir), no skill/task/bash/external paths. Git and PR creation stay in run-sync.sh.",
+      "tools": {
+        "skill": false,
+        "task": false,
+        "edit": true,
+        "bash": false,
+        "webfetch": false,
+        "websearch": false
+      },
+      "permission": {
+        "skill": "deny",
+        "task": "deny",
+        "edit": "allow",
+        "bash": "deny",
+        "webfetch": "deny",
+        "websearch": "deny",
+        "read": "allow",
+        "grep": "allow",
+        "glob": "allow",
+        "list": "allow",
+        "external_directory": "deny"
+      }
+    }
+  }
+}

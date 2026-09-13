@@ -1,0 +1,5 @@
+interface:
+  display_name: "AI Asset Sync"
+  short_description: "Dependabot-style OpenCode sync of skills/rules from owner/repo@ref:path"
+  default_prompt: "Dry-run ai-asset-sync against .github/assets/ai-sync.yml. Report what would change; do not open a PR unless I ask."
+  model: gpt-5.5

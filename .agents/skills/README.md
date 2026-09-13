@@ -13,6 +13,7 @@ Skills live **flat**, one directory per skill directly under `.agents/skills/`. 
 | **ai-brain-dump** | Listen-first capture session; synthesize on request | `/ai-brain-dump [--oktoask] [--thinking] [--oktoreaddocs] [--oktowebsearch] [--all]` |
 | **ai-terse** | Reformat this turn's reply into terse, high-density output with a TL;DR | `/ai-terse` |
 | **ai-template-sync** | UPSERT smooth-devex-template scaffold into an existing repo | `/ai-template-sync` |
+| **ai-asset-sync** | Dependabot-style OpenCode sync of skills/rules from `owner/repo@ref:path` | `/ai-asset-sync` |
 | **context-load-agents-context** | Load ancestor AGENTS.md context for a file | `/context-load-agents-context` |
 | **context-load-context** | Load domain context before implementation | `/context-load-context auth` |
 | **create-hld** | Author a design-only High-Level Design under `.docs/hlds/NNN-<slug>/` | `/create-hld <kebab-slug>` |
@@ -76,6 +77,7 @@ Skills are classified by complexity tier. Each SKILL.md carries a `models` front
 | **ai-terse** | low | Single-turn reply reformatting; no tools or deep reasoning |
 | **ai-brain-dump** | high | Multi-turn synthesis + deep requirement reasoning |
 | **ai-template-sync** | high | Interactive multi-turn Q&A + conditional file sync across tools |
+| **ai-asset-sync** | high | AI-merge of local vs upstream skills/rules + chore PR |
 | **create-hld** | high | Multi-turn clarification gates + architectural judgment (LADRs, NFRs, diagrams) |
 
 ### Sub-skill invocation model guidance
@@ -92,7 +94,7 @@ Skills are flat under `.agents/skills/`; the category lives in the folder-name p
 | Prefix | Skills |
 |--------|--------|
 | `agile-` | `agile-github-breakdown`, `agile-github-task-from-diff` |
-| `ai-` | `ai-brain-dump`, `ai-terse`, `ai-template-sync` |
+| `ai-` | `ai-brain-dump`, `ai-terse`, `ai-template-sync`, `ai-asset-sync` |
 | `context-` | `context-load-agents-context`, `context-load-context` |
 | `git-` | `git-commit`, `git-commit-push`, `git-commit-push-pr`, `git-sync` |
 | _(none)_ | `create-hld`, `manage-rule-system` |

@@ -1,0 +1,185 @@
+name: AI Asset Sync
+
+# Reusable + dispatch entry. Thin wrapper around
+# .agents/skills/ai-asset-sync/scripts/run-sync.sh (same entrypoint as
+# .github/actions/ai-asset-sync). Two packagings, one implementation —
+# sync behaviour changes land in run-sync.sh, not here.
+#
+# Consumers:
+#   uses: generic-automation-and-it/smooth-devex-template/.github/workflows/pipeline-ai-asset-sync.yml@main
+# Same-org: secrets: inherit. Cross-org: map OPENCODE_*_API_KEY explicitly
+# (inherit is same-org/enterprise only). Variables OPENCODE_AI_SYNC_* resolve
+# against the CALLER repo/org.
+#
+# Side-checkout uses github.job_workflow_sha (NOT workflow_sha — that is the
+# CALLER commit and is not in this repo).
+
+on:
+  workflow_dispatch:
+    inputs:
+      manifest_path:
+        description: Path to the YAML manifest.
+        required: false
+        type: string
+        default: .github/assets/ai-sync.yml
+      model:
+        description: Primary model ID override (optional). Blank → OPENCODE_AI_SYNC_MODEL_PRIMARY.
+        required: false
+        type: string
+        default: ""
+      dry_run:
+        description: Analyse + summary, no PR.
+        required: false
+        type: boolean
+        default: false
+      entries_filter:
+        description: Comma-separated substring filter on source/path.
+        required: false
+        type: string
+        default: ""
+      pr_title:
+        description: 'PR title/commit subject. Blank → chore[NO-TICKET]: sync AI assets.'
+        required: false
+        type: string
+        default: ""
+      tools_ref:
+        description: Ref of smooth-devex-template to fetch the skill from when it is not installed locally. Prefer a SHA. Blank → github.job_workflow_sha.
+        required: false
+        type: string
+        default: ""
+  workflow_call:
+    inputs:
+      manifest_path:
+        description: Path to the YAML manifest.
+        required: false
+        type: string
+        default: .github/assets/ai-sync.yml
+      runner:
+        description: Runner label.
+        required: false
+        type: string
+        default: ubuntu-latest
+      tools_ref:
+        description: Ref of smooth-devex-template for the side checkout. Prefer a SHA. Blank → github.job_workflow_sha.
+        required: false
+        type: string
+        default: ""
+      model:
+        description: Primary model ID override.
+        required: false
+        type: string
+        default: ""
+      dry_run:
+        description: Analyse + summary, no PR.
+        required: false
+        type: boolean
+        default: false
+      entries_filter:
+        description: Comma-separated substring filter on source/path.
+        required: false
+        type: string
+        default: ""
+      pr_title:
+        description: 'PR title/commit subject. Blank → chore[NO-TICKET]: sync AI assets.'
+        required: false
+        type: string
+        default: ""
+    secrets:
+      OPENCODE_GEMINI_API_KEY:
+        required: false
+      OPENCODE_COPILOT_API_KEY:
+        required: false
+      OPENCODE_OPENAI_API_KEY:
+        required: false
+      OPENCODE_ANTHROPIC_API_KEY:
+        required: false
+      OPENCODE_GO_OPENAI_API_KEY:
+        required: false
+      OPENCODE_GO_ANTHROPIC_API_KEY:
+        required: false
+      OPENCODE_OPENROUTER_API_KEY:
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ai-asset-sync-${{ github.repository }}
+  cancel-in-progress: false
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  ai-asset-sync:
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
+    env:
+      OPENCODE_AI_SYNC_PROVIDER: ${{ vars.OPENCODE_AI_SYNC_PROVIDER || 'GEMINI' }}
+      # No literal model fallbacks here: run-sync.sh applies Gemini defaults for
+      # the GEMINI provider and fails fast when a non-Gemini provider has no
+      # explicit model (a Gemini id would not exist in that provider's config).
+      OPENCODE_AI_SYNC_MODEL_PRIMARY: ${{ inputs.model || vars.OPENCODE_AI_SYNC_MODEL_PRIMARY || '' }}
+      OPENCODE_AI_SYNC_MODEL_SECONDARY: ${{ vars.OPENCODE_AI_SYNC_MODEL_SECONDARY || '' }}
+      OPENCODE_AI_SYNC_CONFIG: ${{ vars.OPENCODE_AI_SYNC_CONFIG || '' }}
+      AI_ASSET_SYNC_PR_TITLE: ${{ inputs.pr_title || vars.AI_ASSET_SYNC_PR_TITLE || '' }}
+      OPENCODE_CLI_VERSION: ${{ vars.OPENCODE_CLI_VERSION || '' }}
+      OPENCODE_GEMINI_API_KEY: ${{ secrets.OPENCODE_GEMINI_API_KEY }}
+      OPENCODE_COPILOT_API_KEY: ${{ secrets.OPENCODE_COPILOT_API_KEY }}
+      OPENCODE_OPENAI_API_KEY: ${{ secrets.OPENCODE_OPENAI_API_KEY }}
+      OPENCODE_ANTHROPIC_API_KEY: ${{ secrets.OPENCODE_ANTHROPIC_API_KEY }}
+      OPENCODE_GO_OPENAI_API_KEY: ${{ secrets.OPENCODE_GO_OPENAI_API_KEY }}
+      OPENCODE_GO_ANTHROPIC_API_KEY: ${{ secrets.OPENCODE_GO_ANTHROPIC_API_KEY }}
+      OPENCODE_OPENROUTER_API_KEY: ${{ secrets.OPENCODE_OPENROUTER_API_KEY }}
+      OPENCODE_DISABLE_CLAUDE_CODE: "1"
+    steps:
+      - name: Checkout consumer repo
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 0
+          token: ${{ github.token }}
+
+      # 1. Copy-installed / in-repo: skill at .agents/skills/ai-asset-sync
+      # 2. Reusable-workflow mode: fetch this template as a side checkout,
+      #    version-locked to THIS workflow file's commit (job_workflow_sha).
+      - name: Fetch ai-asset-sync tooling
+        if: hashFiles('.agents/skills/ai-asset-sync/scripts/run-sync.sh') == ''
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          repository: generic-automation-and-it/smooth-devex-template
+          # Explicit caller input wins over the org/repo Variable; both fall back
+          # to the commit of this reusable workflow file.
+          ref: ${{ inputs.tools_ref || vars.SMOOTH_DEVEX_TOOLS_REF || github.job_workflow_sha }}
+          path: .smooth-devex-template
+
+      - name: Sync AI assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AI_ASSET_SYNC_MANIFEST: ${{ inputs.manifest_path || '.github/assets/ai-sync.yml' }}
+          AI_ASSET_SYNC_MODEL: ${{ inputs.model || '' }}
+          AI_ASSET_SYNC_ENTRIES_FILTER: ${{ inputs.entries_filter || '' }}
+          AI_ASSET_SYNC_DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+        run: |
+          set -euo pipefail
+          extra=()
+          case "${AI_ASSET_SYNC_DRY_RUN}" in
+            true|TRUE|1|yes|YES|on|ON) extra+=(--dry-run) ;;
+          esac
+          if [ -n "${AI_ASSET_SYNC_MODEL}" ]; then
+            extra+=(--model "${AI_ASSET_SYNC_MODEL}")
+          fi
+          if [ -n "${AI_ASSET_SYNC_ENTRIES_FILTER}" ]; then
+            extra+=(--entries-filter "${AI_ASSET_SYNC_ENTRIES_FILTER}")
+          fi
+          if [ -f ".agents/skills/ai-asset-sync/scripts/run-sync.sh" ]; then
+            bash .agents/skills/ai-asset-sync/scripts/run-sync.sh \
+              --manifest "${AI_ASSET_SYNC_MANIFEST}" \
+              "${extra[@]}"
+          elif [ -f ".smooth-devex-template/.agents/skills/ai-asset-sync/scripts/run-sync.sh" ]; then
+            bash .smooth-devex-template/.agents/skills/ai-asset-sync/scripts/run-sync.sh \
+              --manifest "${AI_ASSET_SYNC_MANIFEST}" \
+              "${extra[@]}"
+          else
+            echo "ai-asset-sync skill not found in-repo or in the tooling checkout" >&2
+            exit 1
+          fi

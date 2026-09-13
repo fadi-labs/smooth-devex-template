@@ -57,6 +57,10 @@
     <File Path=".agents/rules/git/git-policy.instructions.md" />
     <File Path=".agents/rules/git/pr-standards.instructions.md" />
   </Folder>
+  <Folder Name="/.agents/rules/skills/">
+    <File Path=".agents/rules/skills/skill-secret-handling.instructions.md" />
+    <File Path=".agents/rules/skills/skillspector-pre-pr.instructions.md" />
+  </Folder>
   <Folder Name="/.agents/rules/meta/">
     <File Path=".agents/rules/meta/knowledge-conventional-contexts-quality.instructions.md" />
     <File Path=".agents/rules/meta/rules.instructions.md" />
@@ -81,6 +85,16 @@
     <File Path=".agents/skills/agile-github-task-from-diff/SKILL.md" />
     <File Path=".agents/skills/agile-github-task-from-diff/agents/openai.yaml" />
     <File Path=".agents/skills/agile-github-task-from-diff/scripts/create_github_task_from_diff.py" />
+  </Folder>
+  <Folder Name="/.agents/skills/ai-asset-sync/">
+    <File Path=".agents/skills/ai-asset-sync/SKILL.md" />
+    <File Path=".agents/skills/ai-asset-sync/AGENTS.md" />
+    <File Path=".agents/skills/ai-asset-sync/agents/openai.yaml" />
+    <File Path=".agents/skills/ai-asset-sync/assets/opencode.json" />
+    <File Path=".agents/skills/ai-asset-sync/scripts/run-sync.sh" />
+    <File Path=".agents/skills/ai-asset-sync/scripts/lib/install-opencode.sh" />
+    <File Path=".agents/skills/ai-asset-sync/scripts/lib/parse_manifest.py" />
+    <File Path=".agents/skills/ai-asset-sync/scripts/lib/test_parse_manifest.py" />
   </Folder>
   <Folder Name="/.agents/skills/ai-brain-dump/">
     <File Path=".agents/skills/ai-brain-dump/SKILL.md" />
@@ -143,6 +157,7 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/.docs/wiki/">
+    <File Path=".docs/wiki/ai-asset-sync.md" />
     <File Path=".docs/wiki/ai-tooling.md" />
     <File Path=".docs/wiki/architecture.md" />
     <File Path=".docs/wiki/ci.md" />

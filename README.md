@@ -143,6 +143,7 @@ tests/
 | AI tooling setup | [`.docs/wiki/ai-tooling.md`](.docs/wiki/ai-tooling.md) |
 | Testing strategy | [`.docs/wiki/testing.md`](.docs/wiki/testing.md) |
 | CI/CD pipeline | [`.docs/wiki/ci.md`](.docs/wiki/ci.md) |
+| AI asset sync (skills/rules) | [`.docs/wiki/ai-asset-sync.md`](.docs/wiki/ai-asset-sync.md) |
 | Architecture decisions & NFRs | [`.docs/adr/`](.docs/adr/) · [`.docs/nfr/`](.docs/nfr/) |
 
 ---

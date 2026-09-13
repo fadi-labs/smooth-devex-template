@@ -51,6 +51,11 @@
     <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />
   </ItemGroup>
+  <!-- Transitive pin: Aspire.Hosting.Testing pulls MessagePack 2.5.192, which has known
+       vulnerabilities (NU1902/NU1903, warning-as-error). Pin the patched 2.5 line. -->
+  <ItemGroup>
+    <PackageVersion Include="MessagePack" Version="2.5.302" />
+  </ItemGroup>
   <!-- Test packages -->
   <ItemGroup>
     <PackageVersion Include="Bogus" Version="35.6.5" />
