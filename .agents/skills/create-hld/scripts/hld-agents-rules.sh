@@ -17,7 +17,7 @@ cat <<'EOF'
 HLD AGENTS.md Quality Rules (design-only variant — NO architecture section)
 
 The AGENTS.md at the root of an HLD folder is the AI-coder context document.
-Architecture diagrams belong in diagrams/, NOT here. Apply these rules:
+Architecture diagrams belong in diagrams/, NOT here. Budget ~700 words. Apply these rules:
 
 ## Required Structure (in order — omit any empty section except Changelog)
 1. H1 + first line: "# AGENTS.md - <Initiative>" then "AI Context: HLD for <name>. Updated: YYYY-MM-DD"
@@ -49,6 +49,11 @@ Architecture diagrams belong in diagrams/, NOT here. Apply these rules:
 - Duplicating LADR prose or NFR targets — link/summarise instead.
 - Generic boilerplate (e.g. "required env vars: ...").
 - Business value / problem-solution-impact blocks (those belong in README.md).
+- Restating a standard already bound by a documented repo rule or ADR. Note one only where THIS design
+  bends or sharpens it; if no repo rule covers the concern, it is not "already binding" — keep it.
+- Prescribed mechanism where the outcome is what matters. A guardrail names a mechanism only when a
+  different one would violate an LADR; otherwise state what must hold and let the implementer choose.
+- Guidance for a need that does not exist yet — deferrals live as one-line Open items in the LADR.
 
 ## Drift Minimization
 - If a design change alters documented behaviour/decisions, update AGENTS.md in the same change.

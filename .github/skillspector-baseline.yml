@@ -106,3 +106,30 @@ accepted:
       "Session Persistence" — describes the /tmp session-scoped dedup tracker (load each
       AGENTS.md once per session). Keyed to the session id, cleaned by the OS; not
       cross-session persistence or an attacker foothold. Documentation file only.
+
+  # --- HIGH: create-hld template comments flagged as hidden instructions ---
+  - id: P2
+    file: create-hld/assets/AGENTS.template.md
+    reason: >-
+      "Hidden Instructions" — HTML comments in a first-party scaffold template carrying
+      authoring guidance (word budget, no-restatement rule) for the human/agent filling
+      in the generated HLD AGENTS.md. Visible in the file, no directives to exfiltrate
+      or execute anything. Removing them removes the economy-bar guidance.
+  - id: P2
+    file: create-hld/assets/LADR.template.md
+    reason: >-
+      "Hidden Instructions" — HTML comments carrying LADR authoring guidance (status
+      lifecycle, ~400-word budget, outcome-not-recipe, YAGNI deferrals). First-party
+      template guidance, not concealed directives.
+  - id: P2
+    file: create-hld/assets/NFR.template.md
+    reason: >-
+      "Hidden Instructions" — HTML comment carrying the NFR specificity test and
+      ~200-word budget for the author of the generated file. First-party template
+      guidance, not concealed directives.
+  - id: P2
+    file: create-hld/assets/README.template.md
+    reason: >-
+      "Hidden Instructions" — HTML comment carrying the README word budget
+      (~1500 words / ≤150 per goal). First-party template guidance, not concealed
+      directives.

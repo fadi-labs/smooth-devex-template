@@ -11,6 +11,12 @@
 > building and why, the decisions behind it, and the quality bar it must meet. It does
 > **not** contain an implementation plan; execution (phasing, sub-issues, sequencing) is
 > tracked in the issue/work tracker.
+>
+> Requirements state the *outcome* and its constraints. Where a mechanism is named, it is because
+> choosing differently breaks a decision — everything else is the implementer's call.
+
+<!-- Budget ~1500 words total; ≤ 150 words per goal before its acceptance criteria. Over budget
+     means cut, not reformat. -->
 
 ## Intent
 
@@ -21,8 +27,8 @@ target outcome. No marketing language.>
 
 ### 1. <Goal>
 
-<1–4 paragraphs: the change, the pattern/principle behind it, the side effects.
-Concrete examples beat abstractions.>
+<1–2 short paragraphs: the change and the principle behind it. Concrete beats abstract. Do not
+describe how to build it.>
 
 **Acceptance criteria / DoD**
 
@@ -58,8 +64,9 @@ Concrete examples beat abstractions.>
 
 ## Architecture Decisions (LADRs)
 
-LADRs 01–N are strategic (*what* and *why*); later LADRs are tactical (*how*). Each is a
-single decision — a horizontal concern spanning this HLD. See [`./ladrs/`](./ladrs/).
+LADRs 01–N are strategic (*what* and *why*); later LADRs are tactical (*how*). Each is a small, local
+decision the design actually forces — if the goals do not conflict on a point, it is a detail, not a
+decision. See [`./ladrs/`](./ladrs/).
 
 | LADR | Decision | Status |
 |------|----------|--------|
@@ -67,8 +74,9 @@ single decision — a horizontal concern spanning this HLD. See [`./ladrs/`](./l
 
 ## Non-Functional Requirements
 
-Each NFR is a horizontal quality concern spanning the whole design, with a measurable
-target, a verification mechanism, and acceptance criteria. See [`./nfrs/`](./nfrs/).
+Only quality concerns **this** design puts an unusual demand on — concerns already bound by a
+documented repo rule or ADR (e.g. logging conventions, secrets hygiene) are not repeated here. Each
+carries a measurable target, a verification mechanism, and acceptance criteria. See [`./nfrs/`](./nfrs/).
 
 | NFR | Attribute | Target (summary) | Status |
 |-----|-----------|------------------|--------|

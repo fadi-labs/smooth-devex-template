@@ -6,13 +6,17 @@ AI Context: HLD for {{TITLE}}. Updated: {{DATE}}
 > decisions in [`./ladrs/`](./ladrs/), quality spec in [`./nfrs/`](./nfrs/). This file is
 > guardrails, not narrative — the narrative is in [`./README.md`](./README.md).
 
+<!-- Budget ~700 words. Every line must stop a wrong decision. Do not restate project-wide standards
+     that repo rules and ADRs already enforce, and do not prescribe a mechanism unless a different
+     one would violate an LADR. -->
+
 ## TL;DR
 
 <One line: what this HLD covers + where intent, decisions, and quality spec live.>
 
 ## Non-Negotiables
 
-- <Thing an AI coder building against this design would plausibly get wrong.>
+- <Thing an AI coder building against this design would plausibly get wrong — specific to THIS design.>
 - LADRs are Draft/Prototype status — flag deviations rather than silently overriding.
 
 ## Architecture Decisions

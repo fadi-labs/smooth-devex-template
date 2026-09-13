@@ -87,18 +87,37 @@ fi
 if [ -z "$TITLE" ]; then
     TITLE=$(printf '%s' "$SLUG" | tr '-' ' ' | awk '{ for (i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2) } 1')
 fi
+# Reject control characters (tab/newline/CR/...) in the title: they would break the
+# sed program, the generated JSON, and the rendered Mermaid.
+if printf '%s' "$TITLE" | LC_ALL=C grep -q '[[:cntrl:]]'; then
+    echo "Error: title must not contain control characters (tab/newline/...)." >&2
+    exit 2
+fi
+
 SLUG_UPPER=$(printf '%s' "$SLUG" | tr '[:lower:]-' '[:upper:]_')
 DATE=$(date +%F)
 
+# Escape a string for use in a sed replacement (delimiter '|'): backslash,
+# ampersand, and the '|' delimiter are special and must be backslash-escaped.
+sed_escape() { printf '%s' "$1" | sed -e 's/[\\&|]/\\&/g'; }
+# Escape a string for embedding inside a JSON double-quoted string.
+json_escape() { printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'; }
+
+TITLE_SED=$(sed_escape "$TITLE")
+# Mermaid-safe title: {{TITLE_MERMAID}} is used inside double-quoted Mermaid string
+# literals (e.g. System(..., "{{TITLE_MERMAID}}", ...)); encode double quotes as #quot;.
+TITLE_MERMAID_SED=$(sed_escape "$(printf '%s' "$TITLE" | sed 's/"/#quot;/g')")
+
 # Render a template file to a destination with placeholder substitution.
-# Placeholders: {{INDEX}} {{SLUG}} {{SLUG_UPPER}} {{TITLE}} {{DATE}}
+# Placeholders: {{INDEX}} {{SLUG}} {{SLUG_UPPER}} {{TITLE}} {{TITLE_MERMAID}} {{DATE}}
 render() {
     local src="$1" dst="$2"
     [ -f "$src" ] || { echo "Error: missing template: $src" >&2; exit 1; }
     sed -e "s|{{INDEX}}|${INDEX}|g" \
         -e "s|{{SLUG}}|${SLUG}|g" \
         -e "s|{{SLUG_UPPER}}|${SLUG_UPPER}|g" \
-        -e "s|{{TITLE}}|${TITLE}|g" \
+        -e "s|{{TITLE_MERMAID}}|${TITLE_MERMAID_SED}|g" \
+        -e "s|{{TITLE}}|${TITLE_SED}|g" \
         -e "s|{{DATE}}|${DATE}|g" \
         "$src" > "$dst"
 }
@@ -123,7 +142,7 @@ rel() { printf '%s' "${1#"$REPO_ROOT"/}"; }
 printf '{\n'
 printf '  "index": "%s",\n' "$INDEX"
 printf '  "slug": "%s",\n' "$SLUG"
-printf '  "title": "%s",\n' "$TITLE"
+printf '  "title": "%s",\n' "$(json_escape "$TITLE")"
 printf '  "folder": "%s",\n' "$(rel "$TARGET")"
 printf '  "created": [\n'
 for i in "${!created[@]}"; do

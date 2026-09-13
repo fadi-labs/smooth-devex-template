@@ -15,7 +15,7 @@ C4Context
 
     Person(user, "User / Actor", "Who initiates the primary flow.")
 
-    System(thisSystem, "{{TITLE}}", "What this component does, in one line.")
+    System(thisSystem, "{{TITLE_MERMAID}}", "What this component does, in one line.")
 
     System_Ext(ext1, "External System", "A dependency this system talks to.")
 

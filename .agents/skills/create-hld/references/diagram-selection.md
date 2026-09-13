@@ -24,8 +24,11 @@ Surface recommendations to the user **before** writing them, each with a one-lin
 
 ## Rules
 
-- **Each diagram earns its place.** If it restates the C1 or the prose, drop it.
+- **Each diagram earns its place.** If it restates the C1 or the prose, drop it. That is a test you
+  apply while choosing — not a sentence you write into the document.
 - **One concern per diagram.** A sequence diagram shows one flow; add another file for another flow.
+- **Diagram what exists or is being decided**, never a speculative future shape. A box for a component
+  nobody has committed to is YAGNI in picture form.
 - **No code.** Diagrams describe structure and interaction, not implementation. Code samples go in `examples/`.
 - **Roles over names.** Use logical participant/container names ("Handler", "Gateway"), not concrete class or file names — the design predates the code.
 - **Render-clean.** Verify Mermaid parses (no syntax errors) before marking the HLD ready.
