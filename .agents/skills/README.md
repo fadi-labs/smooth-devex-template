@@ -14,6 +14,7 @@ Skills live **flat**, one directory per skill directly under `.agents/skills/`. 
 | **ai-terse** | Reformat this turn's reply into terse, high-density output with a TL;DR | `/ai-terse` |
 | **ai-template-sync** | UPSERT smooth-devex-template scaffold into an existing repo | `/ai-template-sync` |
 | **ai-asset-sync** | Dependabot-style OpenCode sync of skills/rules from `owner/repo@ref:path` | `/ai-asset-sync` |
+| **ai-understanding** | Export session knowledge as Understandings; import, publish, consume | `/ai-understanding [--export [--all]] [--import] [--publish [--portable-only]] [--consume <src>] [--path <target>] [--promote <slug>] [--index]` |
 | **context-load-agents-context** | Load ancestor AGENTS.md context for a file | `/context-load-agents-context` |
 | **context-load-context** | Load domain context before implementation | `/context-load-context auth` |
 | **create-hld** | Author a design-only High-Level Design under `.docs/hlds/NNN-<slug>/` | `/create-hld <kebab-slug>` |
@@ -39,6 +40,40 @@ Opt-in switches relax that, at different token costs (see `ai-brain-dump/README.
 
 The tool switches (`--oktoreaddocs`, `--oktowebsearch`) re-enable the file/web payload bloat the
 listen-first default avoids — use deliberately.
+
+### ai-understanding switches
+
+Default is `--export`: read `INDEX.md` first, then write each durable lesson to
+`.context/understandings/<subject>-<yyyyMMdd-HHmm>/<slug>.md` — gitignored working memory. **A stamped
+folder is one export run**, holding only what that run produced; an improved Understanding reuses its slug
+and is re-written in full into the new folder, so a slug repeated across folders is a **version chain**
+with the newest stamp current and the rest unlisted history. A run that produces nothing creates no folder.
+The subject *name* is reused for a body of work; `_unfiled/` stays unstamped. **A unit is a question and its answer**, and covers
+functional or non-functional knowledge about the system being built — not knowledge about the agent
+toolchain used to build it, which belongs in the nearest `*AGENTS.md`. The index groups by subject but
+lists the current version of every slug, because retrieval is by the question a unit answers. When two
+Understandings conflict, the newer wins — but the system outranks both. Export/import move knowledge
+between the session and disk; publish/consume move it between workspaces as a zip archive.
+
+| Switch | Effect |
+|--------|--------|
+| `--export [--path <dir>]` _(default)_ | Reconcile against `INDEX.md` (`new` / `already known` / `improved` / `new (disambiguated)`), then write this run's output to a new stamped folder, asking via `AskUserQuestion` first (recommending "write everything") unless `--all` is passed |
+| `--export --all [--path <dir>]` | Write every qualifying candidate without asking the user to cut the list |
+| `--import` | Read `INDEX.md`, load only the Understandings whose question matches one the task will raise |
+| `--publish [--portable-only] [--path <target>]` | Write every unit to a zip under `.context/understandings-publish/`, or to `--path` when given; `--portable-only` restricts the archive to `scope: portable` |
+| `--consume <zip> [--path <dir>]` | Unpack a published archive into the working store (default `.context/understandings/`, or `--path` when given) — local path only, no remote fetch |
+| `--promote <slug>` | Escalate to a `*AGENTS.md` context file or a rule |
+| `--index` | Regenerate `INDEX.md` from the store |
+| `--review` | Advisory decay report — contested, never-inherited, or overdue a re-check |
+
+`--path` overrides a mode's default write target — never `--consume`'s source, which stays positional.
+Writing to a default location or to `--path` needs no approval; promoting still asks, as does letting a
+`--consume` make an incoming copy current over a local one — both change durable state someone already
+relies on. A local `improved` export does not ask: it adds a copy and destroys nothing.
+
+Governance — Rules vs Understandings, and inheriting at session start — is a rule
+(`.github/instructions/meta/understandings.instructions.md`), not skill text, so it loads without
+invoking the skill.
 
 ### git-commit / git-commit-push / git-commit-push-pr switches
 
@@ -78,6 +113,7 @@ Skills are classified by complexity tier. Each SKILL.md carries a `models` front
 | **ai-brain-dump** | high | Multi-turn synthesis + deep requirement reasoning |
 | **ai-template-sync** | high | Interactive multi-turn Q&A + conditional file sync across tools |
 | **ai-asset-sync** | high | AI-merge of local vs upstream skills/rules + chore PR |
+| **ai-understanding** | high | Judging what qualifies as transferable knowledge + merge/promotion decisions |
 | **create-hld** | high | Multi-turn clarification gates + architectural judgment (LADRs, NFRs, diagrams) |
 
 ### Sub-skill invocation model guidance
@@ -94,7 +130,7 @@ Skills are flat under `.agents/skills/`; the category lives in the folder-name p
 | Prefix | Skills |
 |--------|--------|
 | `agile-` | `agile-github-breakdown`, `agile-github-task-from-diff` |
-| `ai-` | `ai-brain-dump`, `ai-terse`, `ai-template-sync`, `ai-asset-sync` |
+| `ai-` | `ai-brain-dump`, `ai-terse`, `ai-template-sync`, `ai-asset-sync`, `ai-understanding` |
 | `context-` | `context-load-agents-context`, `context-load-context` |
 | `git-` | `git-commit`, `git-commit-push`, `git-commit-push-pr`, `git-sync` |
 | _(none)_ | `create-hld`, `manage-rule-system` |
@@ -109,5 +145,6 @@ Each skill is a directory containing:
 - **agents/openai.yaml** — OpenAI Codex agent registration with model specification
 - **scripts/** — Helper scripts (if applicable)
 - **references/** — Reference documentation (if applicable)
+- **assets/** — Templates the skill copies into a target location (if applicable)
 
 Skills are tool-agnostic and work across Claude Code, GitHub Copilot, and OpenAI Codex.

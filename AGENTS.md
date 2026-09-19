@@ -45,6 +45,10 @@ Keep `*AGENTS.md` files synchronised with code and documentation changes. Functi
 - Cross-cutting concerns belong under `.docs/hlds/02-nfrs/` or the nearest `*AGENTS.md`.
 - Avoid creating duplicate context files that restate the same plan at multiple levels without adding new information.
 
+## Understandings
+
+Alongside rules (decisions) and `*AGENTS.md` (functional intent) there is a third kind of knowledge: **Understandings** — discovered knowledge about how the system actually behaves, stored under `.context/understandings/<subject>-<yyyyMMdd-HHmm>/<slug>.md` (gitignored, per-workspace — a subject folder, stamped in UTC with when it was created, groups a session's lessons, one file per Understanding inside it). Each is a **question and its answer**. They are evidence, not orders: apply one when its question matches one you are asking, flag it when the code contradicts it, and let the rule win any conflict. Read `.context/understandings/INDEX.md` at task start to find the ones whose question applies. The store is never shared through the repository: knowledge survives a workspace only as a published zip that someone keeps. Governance: `.agents/rules/meta/understandings.instructions.md`; mechanics: the `ai-understanding` skill.
+
 ## Implementation Docs
 
 All planned work is tracked as worktasks under `.context/work-tasks/` (gitignored — local only). Use `/create worktask` to scaffold a new one from the template.
@@ -71,7 +75,7 @@ All rules live under `.agents/rules/` as `*.instructions.md` files and are auto-
 |----------|--------|----------|
 | _(cross-cutting)_ | `.agents/rules/` (flat) | `ai-workflow-rules`, `code-review-standards` (Claude: hook-deferred to review prompts), `project-overview`, `clean-code`, `solid-principles` |
 | git | `.agents/rules/git/` | `git-policy`, `pr-standards` |
-| meta | `.agents/rules/meta/` | `rules` (file convention), `knowledge-conventional-contexts-quality` (AGENTS.md quality) |
+| meta | `.agents/rules/meta/` | `rules` (file convention), `knowledge-conventional-contexts-quality` (AGENTS.md quality), `understandings` (rules vs discovered knowledge) |
 | skills (`.agents/skills/**`) | `.agents/rules/skills/` | `skill-secret-handling` (secrets via runtime env only); `skillspector-pre-pr` (run/predict the static SkillSpector scan and ship baseline updates in the same PR) |
 | backend (`**/*.cs`) | `.agents/rules/backend/` | `api-mediator-validation` (Minimal API + Mediator + FluentValidation fail-fast); `architecture-slices` (clean-architecture boundaries, vertical-slice Features); `backend-logging-conventions` (Information vs Debug levels); `external-api-clients` (Refit list vs singular client split, HybridCache adapter); `migrations` (`[ExcludeFromCodeCoverage]` requirement); `readonly-collections` (`AsNoTracking` → `T[]`; `List<T>` only when mutated); `wiremock-stubbing` (TestFramework.Aspire single-source stub helper) |
 

@@ -64,6 +64,7 @@
   <Folder Name="/.agents/rules/meta/">
     <File Path=".agents/rules/meta/knowledge-conventional-contexts-quality.instructions.md" />
     <File Path=".agents/rules/meta/rules.instructions.md" />
+    <File Path=".agents/rules/meta/understandings.instructions.md" />
   </Folder>
   <Folder Name="/.agents/setup/scripts/">
     <File Path=".agents/setup/scripts/agents-setup.ps1" />
@@ -108,6 +109,15 @@
   <Folder Name="/.agents/skills/ai-template-sync/">
     <File Path=".agents/skills/ai-template-sync/SKILL.md" />
     <File Path=".agents/skills/ai-template-sync/agents/openai.yaml" />
+  </Folder>
+  <Folder Name="/.agents/skills/ai-understanding/">
+    <File Path=".agents/skills/ai-understanding/SKILL.md" />
+    <File Path=".agents/skills/ai-understanding/README.md" />
+    <File Path=".agents/skills/ai-understanding/AGENTS.md" />
+    <File Path=".agents/skills/ai-understanding/agents/openai.yaml" />
+    <File Path=".agents/skills/ai-understanding/assets/UNDERSTANDING.template.md" />
+    <File Path=".agents/skills/ai-understanding/references/publish-consume.md" />
+    <File Path=".agents/skills/ai-understanding/scripts/understanding_index.py" />
   </Folder>
   <Folder Name="/.agents/skills/context-load-agents-context/">
     <File Path=".agents/skills/context-load-agents-context/SKILL.md" />

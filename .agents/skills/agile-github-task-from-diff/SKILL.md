@@ -69,7 +69,7 @@ After the task issue is created, rename the **current local branch** so it confo
 (the source of truth). This guarantees the downstream PR title and `Closes #<issue>` link can be derived
 from the branch name.
 
-The script prints a ready-made suggestion after creating the issue (`Suggested branch rename: git branch -m <type>/<issue>-<slug>`) — it derives `<type>` from the dominant horizontal layer, `<issue>` from the new issue number, and the slug from the task title. Run that command (no commit/push is performed by this skill). Override the `<type>` if the diff is better described by `fix`/`refactor` than the layer mapping suggests.
+The script prints a ready-made suggestion after creating the issue (`Suggested branch rename: git branch -m <type>/<issue>-<slug>`) — it derives `<type>` from the **highest-precedence layer present** (`backend` > `tests` > `documentation` > `ai-tooling` > `config` > `general`) — not the largest one — `<issue>` from the new issue number, and the slug from the task title. Only `backend` maps to `feat`, so a change that adds a capability outside `src/` is never suggested as `feat`. Run that command (no commit/push is performed by this skill). Override the `<type>` if the diff is better described by `fix`/`refactor` than the layer mapping suggests.
 
 Notes:
 

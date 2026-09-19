@@ -23,6 +23,7 @@ First-party AI agent skills. They legitimately run shell, `gh`/`git`, and templa
 
 - The gate decision is computed by `.github/scripts/skillspector-report.py`, not by SkillSpector's raw `risk > 50` exit code (which is pinned at 100 for first-party skills by design). The script subtracts baselined findings and fails only on active ones; a scan error still hard-fails.
 - The job summary lists **Active** findings (gate-failing) separately from **Accepted (baselined)** findings, and flags stale baseline entries after a fix removes a finding.
+- **`ai-understanding` never writes to the tracked tree.** Its working store is `.context/understandings/<subject>-<yyyyMMdd-HHmm>/<slug>.md` (gitignored), and `--publish` writes a zip under `.context/understandings-publish/`, also gitignored — the store is not shared through the repository. A change that makes this skill write to `.agents/understandings/` or any other tracked path turns unreviewed session observations into shared repository memory — see that skill's LADR-001 and LADR-008.
 - Two scans run per CI invocation (policy A, LADR-001): a **gating static scan** (`--no-llm`, drives the decision + SARIF) and, when a key is configured, a **non-gating LLM advisory scan** rendered as a separate, clearly-labeled summary section. The baseline (`skillspector-baseline.yml`) covers only the static scan.
 
 ## Changelog
@@ -34,4 +35,6 @@ First-party AI agent skills. They legitimately run shell, `gh`/`git`, and templa
 | 2026-06-21 | Initial version — documents the SkillSpector baseline gate contract and the secret-handling guardrail for skills. | #52 |
 | 2026-06-21 | LADR-001: gate on the deterministic static scan; LLM semantic stage runs as a non-blocking advisory (policy A). Resolves the static-vs-LLM baseline mismatch that failed the gate on run 27907080342. | #52 |
 | 2026-09-13 | `ai-asset-sync` becomes the first skill consuming secrets (env-only: provider API key + `GITHUB_TOKEN`); status text updated from "no skill handles a real secret". | #66 |
+| 2026-09-19 | `ai-understanding` added — `--export` writes a session's discovered knowledge to the gitignored `.context/understandings/` store; `--publish` to a tracked path is a separate approved step. | |
+| 2026-09-19 | `ai-understanding`: publish retargeted from a tracked path to a zip under `.context/` (LADR-008); store path shows the stamped subject folder. | |
 | 2026-07-31 | SARIF now **omits** baselined findings instead of marking them `suppressions`; the code-scanning check was red because the back end did not honor SARIF suppressions. Summary "Accepted (baselined)" section is unchanged (reads the scan output). | |
