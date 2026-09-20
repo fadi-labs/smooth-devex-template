@@ -10,10 +10,10 @@ PROMPT=$(jq -r '.prompt // empty')
 
 if echo "$PROMPT" | grep -qiE '(update|create an?)\s+agents?\.md'; then
   cat <<'EOF'
-AGENTS.md Creation/Update Rules (from knowledge-conventional-contexts-quality.instructions.md + AI_WORKTASK_PROMOTE_STANDALONE_TEMPLATE.md):
+AGENTS.md Creation/Update Rules (from knowledge-conventional-contexts-quality.instructions.md + .agents/templates/TEMPLATE_AGENTS.md):
 
 ## Template to use
-Base all new AGENTS.md files on: .agents/templates/AI_WORKTASK_PROMOTE_STANDALONE_TEMPLATE.md
+Base all new AGENTS.md files on: .agents/templates/TEMPLATE_AGENTS.md
 (Root CLAUDE.md/AGENTS.md is exempt from template requirements)
 
 ## Required Structure (in this order — omit empty sections except Changelog)
