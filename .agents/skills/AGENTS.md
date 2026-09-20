@@ -38,3 +38,4 @@ First-party AI agent skills. They legitimately run shell, `gh`/`git`, and templa
 | 2026-09-19 | `ai-understanding` added — `--export` writes a session's discovered knowledge to the gitignored `.context/understandings/` store; `--publish` to a tracked path is a separate approved step. | |
 | 2026-09-19 | `ai-understanding`: publish retargeted from a tracked path to a zip under `.context/` (LADR-008); store path shows the stamped subject folder. | |
 | 2026-07-31 | SARIF now **omits** baselined findings instead of marking them `suppressions`; the code-scanning check was red because the back end did not honor SARIF suppressions. Summary "Accepted (baselined)" section is unchanged (reads the scan output). | |
+| 2026-09-20 | `create-worktask` added, replacing the Claude-only `worktask-create.sh` hook. Its `assets/` template is deliberately HTML-comment-free so it needs no `P2` baseline entry — unlike `create-hld/assets/*`, whose four entries are the precedent. | |

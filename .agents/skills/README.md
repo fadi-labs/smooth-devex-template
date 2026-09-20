@@ -18,6 +18,7 @@ Skills live **flat**, one directory per skill directly under `.agents/skills/`. 
 | **context-load-agents-context** | Load ancestor AGENTS.md context for a file | `/context-load-agents-context` |
 | **context-load-context** | Load domain context before implementation | `/context-load-context auth` |
 | **create-hld** | Author a design-only High-Level Design under `.docs/hlds/NNN-<slug>/` | `/create-hld <kebab-slug>` |
+| **create-worktask** | Scaffold and populate a standalone worktask under `.context/work-tasks/` | `/create-worktask <kebab-slug>` |
 | **git-commit** | Commit with conventional format | `/git-commit [--autonomous]` |
 | **git-commit-push** | Commit and push to remote | `/git-commit-push [--autonomous]` |
 | **git-commit-push-pr** | Commit, push, and create/update PR | `/git-commit-push-pr [--autonomous]` |
@@ -115,6 +116,7 @@ Skills are classified by complexity tier. Each SKILL.md carries a `models` front
 | **ai-asset-sync** | high | AI-merge of local vs upstream skills/rules + chore PR |
 | **ai-understanding** | high | Judging what qualifies as transferable knowledge + merge/promotion decisions |
 | **create-hld** | high | Multi-turn clarification gates + architectural judgment (LADRs, NFRs, diagrams) |
+| **create-worktask** | high | Investigation + requirement authoring the whole 9-phase workflow runs on |
 
 ### Sub-skill invocation model guidance
 
@@ -133,7 +135,7 @@ Skills are flat under `.agents/skills/`; the category lives in the folder-name p
 | `ai-` | `ai-brain-dump`, `ai-terse`, `ai-template-sync`, `ai-asset-sync`, `ai-understanding` |
 | `context-` | `context-load-agents-context`, `context-load-context` |
 | `git-` | `git-commit`, `git-commit-push`, `git-commit-push-pr`, `git-sync` |
-| _(none)_ | `create-hld`, `manage-rule-system` |
+| _(none)_ | `create-hld`, `create-worktask`, `manage-rule-system` |
 
 A skill's folder name MUST equal its `name:` frontmatter (this is the slash-command name). When adding a skill, pick the prefix of its category and keep the folder one level under `.agents/skills/`.
 
