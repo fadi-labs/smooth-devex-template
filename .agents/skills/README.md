@@ -57,8 +57,8 @@ between the session and disk; publish/consume move it between workspaces as a zi
 
 | Switch | Effect |
 |--------|--------|
-| `--export [--path <dir>]` _(default)_ | Reconcile against `INDEX.md` (`new` / `already known` / `improved` / `new (disambiguated)`), then write this run's output to a new stamped folder, asking via `AskUserQuestion` first (recommending "write everything") unless `--all` is passed |
-| `--export --all [--path <dir>]` | Write every qualifying candidate without asking the user to cut the list |
+| `--export [--path <dir>]` _(default)_ | Reconcile against `INDEX.md` (`new` / `already known` / `improved` / `new (disambiguated)` / `has another home`, that last one naming the file), then write this run's output to a new stamped folder, asking via `AskUserQuestion` first (recommending "write everything") unless `--all` is passed |
+| `--export --all [--path <dir>]` | Write every candidate without asking the user to cut the list, holding the qualifying bar loosely — a marginal candidate is written, not dropped |
 | `--import` | Read `INDEX.md`, load only the Understandings whose question matches one the task will raise |
 | `--publish [--portable-only] [--path <target>]` | Write every unit to a zip under `.context/understandings-publish/`, or to `--path` when given; `--portable-only` restricts the archive to `scope: portable` |
 | `--consume <zip> [--path <dir>]` | Unpack a published archive into the working store (default `.context/understandings/`, or `--path` when given) — local path only, no remote fetch |

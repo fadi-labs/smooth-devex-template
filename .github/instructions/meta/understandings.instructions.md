@@ -10,13 +10,18 @@ alwaysApply: true
 # Rules vs Understandings
 
 This repository holds three kinds of knowledge. Confusing them is the failure this rule prevents.
-Updated: 2026-09-19
+Updated: 2026-09-20
 
 | Kind | Where | Nature | Authority |
 |------|-------|--------|-----------|
 | **Rules** | `.agents/rules/` (→ `.github/instructions/`) | The user's decisions | Follow always |
 | **AGENTS.md** | Nearest `*AGENTS.md` to the code | Functional intent, layered domain → sub-domain → feature → technology | Authoritative for that code |
 | **Understandings** | `.context/understandings/<subject>-<yyyyMMdd-HHmm>/<slug>.md` | The **input and outcome** of a session's memory — reusable, and holding only what no code file or knowledge document already holds. A stamped folder is one export run; a slug repeated across folders is a version chain, newest current | Apply when the question matches one you are asking; **the newer of two conflicting units wins** |
+
+**"Already holds" means the question, not the topic.** A document recording *what was decided* — an ADR,
+an NFR, an LADR — has no claim on *how to recognise it, re-derive it, or choose again*. The verdict and
+the reasoning that produces the verdict answer two different questions, so a document mentioning the
+subject does not make the Understanding redundant.
 
 **Rules are not up for reinterpretation** based on what you observe. If a rule appears to be causing
 problems, say so — do not work around it.
@@ -103,7 +108,10 @@ full as a new version under the same slug, which adds a copy and destroys nothin
 reports its outcomes rather than asking. Writing to a mode's default location, or to an explicit `--path`, needs no approval: the
 destination was already chosen, and every write is reported. Exporting to the local disposable store
 proposes the split first — via `AskUserQuestion`, recommending "write everything" — unless `--all` was
-passed, which is itself the instruction to skip it. The `ai-understanding` skill owns the mechanics.
+passed. `--all` is not only a waiver of that ask: it also widens what qualifies, so a marginal candidate
+is written rather than dropped and the user prunes afterwards. An agent that never asks but filters hard
+upstream has honoured the letter of the switch and defeated its purpose. The `ai-understanding` skill
+owns the mechanics.
 
 ## Changelog
 
@@ -123,4 +131,5 @@ passed, which is itself the instruction to skip it. The `ai-understanding` skill
 | 2026-09-19 | Vocabulary aligned to the export/import vs publish/consume split; `--all` named as the explicit waiver of the pre-write cut, resolving a rule/skill contradiction. |
 | 2026-09-19 | Ask-before-writing carve-out narrowed to merge and promote; a named destination (default or `--path`) is now the approval for every write mode. |
 | 2026-09-19 | LADR-010: a slug is a version key, not a unique name — an export run writes its own stamped folder, an improved unit is re-written in full, and the index shows the newest version of each slug. Importing gained the recency precedence rule (newer wins, analyse briefly, ask when unsure, the system outranks both). |
+| 2026-09-20 | `--all` restated as breadth as well as prompt-suppression — it widens the qualifying bar, not only the ask. "Already holds" narrowed to the question rather than the topic: a record of a decision has no claim on the reusable reasoning behind it. |
 | 2026-09-19 | Ask-before list corrected for LADR-010: merging is no longer an operation, so the carve-out is promote plus a consume that would make an incoming copy current. |

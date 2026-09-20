@@ -40,7 +40,9 @@ A file is a **question and its answer**, plus why it holds and where it stops ap
 /ai-understanding --review        # what is stale, contested, or nobody ever used
 ```
 
-Ask for `--export --all` to skip the "which of these should I write?" question.
+Ask for `--export --all` when you want the complete dump. It skips the "which of these should I write?"
+question *and* tells the agent to hold its own bar loosely — a marginal one gets written rather than
+dropped, so you prune afterwards instead of beforehand.
 
 Sharing is sending someone the folder. They read it in any editor; their agent reads it the same way
 yours does.
