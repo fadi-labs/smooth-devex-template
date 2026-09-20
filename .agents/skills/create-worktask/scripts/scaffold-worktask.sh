@@ -42,7 +42,7 @@ USAGE
 while [ "$#" -gt 0 ]; do
     case "$1" in
         -h|--help) usage; exit 0 ;;
-        --title) TITLE="${2:-}"; shift 2 ;;
+        --title) [ "$#" -ge 2 ] || { echo "Error: --title requires a value." >&2; usage >&2; exit 2; }; TITLE="$2"; shift 2 ;;
         --force) FORCE=1; shift ;;
         --) shift; break ;;
         -*) echo "Unknown option: $1" >&2; usage >&2; exit 2 ;;
