@@ -317,7 +317,7 @@ Does this plan look correct? Reply 'approved' to proceed, or provide feedback.
    - Add to `## Requirements` section: accepted plan from Phase 4
    - Document architectural decisions (from Phase 3 LADRs)
    - Record tech stack requirements and integration points
-   - Add test references (L0/L1 tier, test sub-folder paths)
+   - Add test references (L0/L1/L2 tier, test sub-folder paths)
 
 2. **Update or create project ADRs** (`.docs/adrs/`):
    - For each Phase 3 LADR: create corresponding ADR file if it's a foundational architectural decision
