@@ -1,6 +1,6 @@
 # Task: {{TITLE}}
 
-Process: [`AI_WORKTASK_PROMOTE_STANDALONE_TEMPLATE.md`](../../.agents/templates/AI_WORKTASK_PROMOTE_STANDALONE_TEMPLATE.md) — phases, gates, and output rules. Read it before Phase 0; it is not copied here.
+Process: [`AI_WORKTASK_PROMOTE_STANDALONE_TEMPLATE.md`](../../.agents/templates/AI_WORKTASK_PROMOTE_STANDALONE_TEMPLATE.md) defines the phases, gates, and output rules for the workflow below, starting at Phase 0.
 
 ## Execution Profile
 - **Recommended session model:** [model — human action: set with /model BEFORE starting]

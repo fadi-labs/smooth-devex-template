@@ -1,5 +1,5 @@
 interface:
   display_name: "Create Worktask"
   short_description: "Scaffold and populate a standalone worktask under .context/work-tasks/"
-  default_prompt: "Create a worktask: investigate the relevant contexts, scaffold .context/work-tasks/<slug>.md, then fill the Execution Profile, Contexts and Instructions so a standalone AI coder can execute it without asking questions. Link the process template; do not copy it."
+  default_prompt: "Create a worktask: investigate the relevant contexts, scaffold .context/work-tasks/<slug>.md, then fill the Execution Profile, Contexts and Instructions so it is self-contained enough for a standalone AI coder to execute end-to-end. Link the process template; do not copy it."
   model: gpt-5.5

@@ -2,8 +2,8 @@
 name: create-worktask
 description: >
     Invoke to scaffold and fully populate a worktask under `.context/work-tasks/`
-    so a standalone AI coder can execute it without asking questions. Trigger
-    keywords: "create worktask", "create a work task", "make a work-task",
+    so it is self-contained enough for a standalone AI coder to execute end-to-end.
+    Trigger keywords: "create worktask", "create a work task", "make a work-task",
     "promote this to a worktask". Also triggers on /create-worktask.
     Does NOT trigger on questions about how worktasks work.
 allowed-tools: >
@@ -38,10 +38,8 @@ gaps, so populate it from **real investigation**, not placeholders.
   in a worktask overrides `git-policy.instructions.md`.
 - **The session model is a human action.** Recommend it; never claim to set it. The user runs
   `/model <name>` before starting and can switch at a gate.
-- **No HTML comments in `assets/WORKTASK.template.md`.** The SkillSpector gate flags comments in skill
-  assets as `P2` hidden instructions (see the `create-hld/assets/*` baseline entries). Authoring
-  guidance lives here in SKILL.md instead, which is read every invocation. Reintroducing comments in
-  the asset means adding a justified `.github/skillspector-baseline.yml` entry in the same PR.
+- **No HTML comments in `assets/WORKTASK.template.md`.** Authoring guidance for the asset lives in
+  this skill's `AGENTS.md` instead. See that file for why.
 - **Do not execute the worktask in the same turn that creates it.** Creating and executing are separate
   invocations; the user chooses the model and path in between.
 
@@ -140,3 +138,4 @@ gaps, so populate it from **real investigation**, not placeholders.
 | Date | Change | Ref |
 | :---- | :---- | :---- |
 | 2026-09-20 | Created — replaces the `worktask-create.sh` UserPromptSubmit hook. Carries the hook's remediated contract (Execution Profile; link-don't-copy; commits per-task and default not allowed; L0/L1/L2 tiers; model as a human action) plus a deterministic scaffolder and an asset template. | — |
+| 2026-09-21 | Reworded the `description` and the P2/hidden-instructions Non-Negotiable to address GHAS SkillSpector advisory findings (Direct Prompt Extraction, Excessive Agency) on PR #71 — dropped the "without asking questions" phrasing (replaced with "self-contained enough to execute end-to-end") and moved the hidden-instructions rationale to `AGENTS.md`, which the scan doesn't cover. No behavior change. | #71 |
