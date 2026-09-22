@@ -63,6 +63,28 @@ Commit current changes using conventional commits format.
    e. Execute git commit with the conventional commit message
 6. Repeat for each logical unit until all changes are committed
 
+## Commit Message Body
+
+Write the message **why over what** — the diff already shows what changed; the body explains the intent the diff cannot.
+
+**Subject line:**
+- Aim ≤50 chars when possible (hard cap 72, per git-policy).
+- Never restate the file/module in the description when the scope already says it (e.g. `fix(auth): add token check`, not `fix(auth): add token check to auth handler`).
+
+**Body (only if needed):**
+- Skip entirely when the subject is self-explanatory.
+- Add a body only for: non-obvious **why**, breaking changes, migration notes, linked issues.
+- Wrap at 72 chars; bullets use `-`, not `*`.
+- Reference issues/PRs at the end: `Closes #42`, `Refs #17`.
+
+**What NEVER goes in:**
+- "This commit does X", "I", "we", "now", "currently" — the diff says what.
+- "As requested by..." — use a `Co-authored-by` trailer instead.
+- Emoji, unless project convention requires.
+- Restating a file name the scope already names.
+
+**Remember:** the allowed type list and hard subject rules come from `.agents/rules/git/git-policy.instructions.md` — the source of truth. The guidance above tunes message quality; it never overrides that rule.
+
 ## Arguments
 
 - Optional: pre-defined commit message (if not provided, will analyze changes and generate appropriate conventional commit message)

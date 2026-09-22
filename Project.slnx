@@ -35,7 +35,6 @@
     <File Path=".agents/hooks/load-agents-context.sh" />
     <File Path=".agents/hooks/manage-rule-system-context.sh" />
     <File Path=".agents/hooks/slnx-docs-sync.py" />
-    <File Path=".agents/hooks/worktask-create.sh" />
   </Folder>
   <Folder Name="/.agents/rules/">
     <File Path=".agents/rules/ai-workflow-rules.instructions.md" />
@@ -133,6 +132,13 @@
     <File Path=".agents/skills/create-hld/agents/openai.yaml" />
     <File Path=".agents/skills/create-hld/scripts/scaffold-hld.sh" />
     <File Path=".agents/skills/create-hld/scripts/hld-agents-rules.sh" />
+  </Folder>
+  <Folder Name="/.agents/skills/create-worktask/">
+    <File Path=".agents/skills/create-worktask/SKILL.md" />
+    <File Path=".agents/skills/create-worktask/AGENTS.md" />
+    <File Path=".agents/skills/create-worktask/agents/openai.yaml" />
+    <File Path=".agents/skills/create-worktask/assets/WORKTASK.template.md" />
+    <File Path=".agents/skills/create-worktask/scripts/scaffold-worktask.sh" />
   </Folder>
   <Folder Name="/.agents/skills/git-commit/">
     <File Path=".agents/skills/git-commit/SKILL.md" />

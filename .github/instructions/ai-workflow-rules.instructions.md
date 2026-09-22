@@ -8,7 +8,7 @@ alwaysApply: true
 ---
 # AI-Assisted Coding Workflow
 
-Standard execution workflow for all coding tasks. Aligned with `AI_WORKTASK_PROMOTE_STANDALONE_TEMPLATE.md`. Updated: 2026-02-25
+Standard execution workflow for all coding tasks. Authoritative for the workflow; `AI_WORKTASK_PROMOTE_STANDALONE_TEMPLATE.md` carries a FALLBACK copy that must be kept in sync with this file. Updated: 2026-09-20
 
 ## Phase 0: Context Load (MANDATORY BLOCKING)
 
@@ -22,7 +22,7 @@ Root AGENTS.md / NFR files alone are NOT sufficient. Domain-specific context is 
 |------------|-------|
 | Backend code (.NET, C#, server-side) | `.agents/rules/backend/*` rules (scoped to `**/*.cs` via frontmatter; attach when a C# file is opened) |
 
-All rules under `.agents/rules/` are auto-loaded every session, organized into category subfolders (`backend/`, `git/`, `meta/`); applicability is scoped per-file via frontmatter (`paths`/`globs`/`applyTo`). For functional `*AGENTS.md` context: use the `load-context` skill with `[domain]` or manually request the relevant files. The Rule Categories table in root `AGENTS.md` lists each rule and what it covers.
+All rules under `.agents/rules/` are auto-loaded every session, organized into category subfolders (`backend/`, `git/`, `meta/`); applicability is scoped per-file via frontmatter (`paths`/`globs`/`applyTo`). For functional `*AGENTS.md` context: use the `context-load-context` skill with `[domain]` or manually request the relevant files. The Rule Categories table in root `AGENTS.md` lists each rule and what it covers.
 
 If no context loaded: **BLOCK** → offer: Load / Search / Create / BYPASS.
 
@@ -66,6 +66,10 @@ Skip when: no documentation convention exists or changes are trivial.
 Implement autonomously. No permission asks. Complete implementations (no TODOs). Fix forward.
 
 **On failure:** Attempt to fix forward. If blocked after 2 attempts, report status with suggested options and wait for user guidance.
+
+### Parallelism
+
+Batch independent tool calls in a single message: reads of different files, greps, and builds or tests of projects that do not depend on each other. Sequence only when one call's output feeds the next. Never run two write operations against the same file, and never run concurrent `dotnet build` / `dotnet test` over the same solution. Parallel writers require worktree isolation plus an explicit merge step — otherwise implement sequentially.
 
 ## Phase 7: Heimdall (Review)
 
@@ -137,3 +141,4 @@ Use when: 3+ files, new patterns, cross-cutting concerns, or ambiguous scope.
 |:-----|:-------|
 | 2026-05-30 | Initial version. |
 | 2026-06-17 | Phase 0: state that AGENTS.md/`*AGENTS.md` are first-class context (read like CLAUDE.md) and layered domain→sub-domain→feature→technology. Pattern notation `*_AGENTS.md`→`*AGENTS.md` (underscore no longer required). |
+| 2026-09-20 | Phase 6: added a **Parallelism** subsection (batch independent tool calls; no concurrent writes to one file; no concurrent `dotnet build`/`dotnet test` over one solution; parallel writers need worktree isolation + merge). Phase 0: `load-context`→`context-load-context` (the former resolves to nothing). Header now states this file is authoritative and the worktask template's copy is a FALLBACK to keep in sync; stale `Updated:` date refreshed. |

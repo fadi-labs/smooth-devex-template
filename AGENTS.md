@@ -51,7 +51,7 @@ Alongside rules (decisions) and `*AGENTS.md` (functional intent) there is a thir
 
 ## Implementation Docs
 
-All planned work is tracked as worktasks under `.context/work-tasks/` (gitignored — local only). Use `/create worktask` to scaffold a new one from the template.
+All planned work is tracked as worktasks under `.context/work-tasks/` (gitignored — local only). Use the `create-worktask` skill (`/create-worktask <kebab-slug>`) to scaffold and populate a new one.
 
 ## Repository Layout (Navigation)
 

@@ -41,6 +41,8 @@
       "Skill(ai-understanding)",
       "Skill(context-load-agents-context)",
       "Skill(context-load-context)",
+      "Skill(create-worktask)",
+      "Bash(.agents/skills/create-worktask/scripts/scaffold-worktask.sh:*)",
       "Skill(git-commit)",
       "Skill(git-commit-push)",
       "Skill(git-commit-push-pr)",
@@ -113,14 +115,6 @@
           {
             "type": "command",
             "command": ".agents/hooks/code-review-standards-context.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": ".agents/hooks/worktask-create.sh"
           }
         ]
       },

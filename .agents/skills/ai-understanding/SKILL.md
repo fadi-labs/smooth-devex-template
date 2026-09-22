@@ -76,7 +76,7 @@ Export and import are about **this session's memory**: export writes what the se
 | Switch | Effect |
 |--------|--------|
 | `--export [--path <dir>]` _(default)_ | **Reconcile against `INDEX.md`**, then write this run's new and improved units to a new `.context/understandings/<subject>-<yyyyMMdd-HHmm>/`, or under `--path` when given. Proposes the split first; writes nothing and creates no folder when nothing changed |
-| `--export --all [--path <dir>]` | Same, but write every qualifying candidate without pausing for the user to cut the list |
+| `--export --all [--path <dir>]` | Same, but breadth-first: write every candidate without pausing for the user to cut the list, **and hold the qualifying bar loosely** — a marginal candidate is written, not dropped, because the user prunes afterwards |
 | `--import` | Load Understandings whose question matches one the task will make you ask |
 | `--publish [--portable-only] [--path <target>]` | Write every unit to a zip under `.context/understandings-publish/`, or to `--path` when given; `--portable-only` restricts the archive to `scope: portable` units |
 | `--consume <zip> [--path <dir>]` | Unpack a published archive into the working store — `.context/understandings/` by default, or `--path` when given |
@@ -84,9 +84,12 @@ Export and import are about **this session's memory**: export writes what the se
 | `--index` | Regenerate `INDEX.md` from the store |
 | `--review` | Advisory decay report — what is contested, never inherited, or overdue a re-check |
 
-`--all` applies only to `--export`, where it means "skip the cut". `--publish`'s scope filter is a
-separate switch, `--portable-only` — the two are unrelated despite the old design overloading `--all`
-for both.
+`--all` applies only to `--export`, where it means two things at once: **skip the cut**, and **widen
+what qualifies**. The second half is the one that gets lost — an agent can honour "never ask" to the
+letter while filtering hard upstream, and still report one unit as a complete export. Under `--all`,
+resolve a marginal candidate toward writing it: the user asked for breadth and prunes what they did not
+want. `--publish`'s scope filter is a separate switch, `--portable-only` — the two are unrelated despite
+the old design overloading `--all` for both.
 
 `--path` is always the **target** a mode writes to, overriding its default — never a source.
 `--consume`'s source stays positional.
@@ -120,10 +123,19 @@ Then classify every candidate against the index:
 
 | Candidate matches | Action | Reported as |
 |---|---|---|
-| Nothing in the index | Write it in this run's new folder | `new` |
+| Nothing in the index, and the qualifying test below routes it **to** the store | Write it in this run's new folder | `new` |
 | A current unit, same question, and this session changed nothing | **Write nothing** | `already known` |
 | A current unit, same question, and this session refined it — corrected a claim, moved `confidence`, added a boundary | Write the **complete improved unit** into this run's new folder, reusing the slug | `improved` |
 | A current slug, but a genuinely different question | New unit, disambiguated slug, in this run's folder | `new (disambiguated)` |
+| Nothing in the index, but the qualifying test routes it **away** — another artefact already holds the **reusable** knowledge, not merely a decision about it | **Write nothing.** Name that file | `has another home` |
+
+Rows two to four are decided against the index alone. Rows one and five **split the absent-index case
+between them**, and *What qualifies: nothing with another home* below is what decides which of the two
+applies — so no candidate ever maps to both, and an absent-index candidate is not `new` until that test
+has been run on it. `has another home` is the exclusion's only reporting slot, and prose does not satisfy
+it: **name the file that holds the knowledge**, or the skip is unauditable and indistinguishable from a
+candidate you forgot. Under `--all` it should be rare — the bar is loose there, and a document that
+covers part of the knowledge is not a claim on the rest.
 
 **Judge "same question" generously.** This step decides everything, and judging it strictly is what
 produced three answers to one question under three slugs. The test:
@@ -149,8 +161,8 @@ unit and setting it aside is not inheritance. If the run genuinely inherited not
 field back to find units nothing ever inherits, and a store where no unit carries it makes `--review`
 report "nothing flagged" because it has nothing to read.
 
-**Report every candidate under one of the four outcomes.** A silent skip is indistinguishable from a
-missed export.
+**Report every candidate under one of the five outcomes**, and give `has another home` the path it
+requires. A silent skip is indistinguishable from a missed export.
 
 ### What a run writes
 
@@ -177,7 +189,17 @@ Work down this list. The store is the residue after the other homes have taken w
 | Functional intent about a code area | the nearest `*AGENTS.md` |
 | A decision the user made | a rule |
 | A design decision with trade-offs | an LADR in the nearest `*AGENTS.md` |
+| A decision already recorded elsewhere, where the **reusable reasoning or diagnostic behind it is not** | **here** — that record has no claim on this |
 | **Reusable, and none of the above has a claim on it** | **here** |
+
+**A document that records *what was decided* has no claim on *how to recognise it, re-derive it, or
+choose again*.** The ADR, NFR or LADR carries the verdict — the option selected, the number it moved.
+The Understanding carries the failure signature that identified the problem, the miss profile of each
+option not chosen, the diagnostic that separates this cause from the one it looks like. "We selected
+`english`; recall 0.44 → 0.78" and "each configuration has a distinct miss profile, here is what each one
+misses and how to choose" answer two different questions, and the first does not make the second
+redundant. Ask what question the other document answers, not what it is about — a document **mentioning**
+the topic is not a claim on it.
 
 "Not written down yet" is not the same as "no other home". If something belongs in an `*AGENTS.md` and
 nobody has written it, write it there — otherwise the store becomes the place for anything unfiled.
@@ -207,8 +229,10 @@ A single session frequently contains more than one durable lesson. Split it — 
 
 When proposing a split, ask with `AskUserQuestion` — recommend **write every candidate** first, with
 cutting specific slugs as the alternative, rather than a prose list a reader could mistake for output.
-**With `--all`, skip the ask entirely** — write every candidate that qualifies and report what was
-written, so the user prunes afterwards instead of beforehand.
+**With `--all`, skip the ask entirely and widen the bar** — write every candidate, resolving a marginal
+one toward writing rather than dropping, and report what was written, so the user prunes afterwards
+instead of beforehand. `--all` is a request for breadth: a one-unit export out of a session carrying
+several lessons answers the letter of the switch and defeats its purpose.
 
 ### Writing one
 
@@ -283,7 +307,7 @@ If it needs must/never language, it is not an Understanding — propose it as a 
 ### Slug reuse is versioning, not a collision
 
 A slug already in the store is **not** a name clash to resolve — it is the address of knowledge you are
-about to revise. The four outcomes are stated once, in *Step one: reconcile with the store* above; this
+about to revise. The five outcomes are stated once, in *Step one: reconcile with the store* above; this
 section only says what reuse means and what it is not.
 
 - **Same question → reuse the slug**, and write the complete improved unit into this run's folder. That
@@ -407,7 +431,7 @@ Propose the promotion; the user decides. Once promoted, the Understanding record
 ## Guardrails
 
 - Writing to a mode's default location, or to an explicit `--path`, needs no approval — the location was already chosen, by default or by the user typing it. Report what was written and where, every time; removing the prompt must not remove the user's chance to notice.
-- Ask before promoting, and before a `--consume` makes an incoming copy the current version of a slug this workspace already holds — both change durable state someone already chose to keep or rely on. A local `--export` writing an `improved` version does **not** ask: it adds a copy and destroys nothing, and the four outcomes are reported. On `--export`, propose the split with `AskUserQuestion` (recommending "write every candidate" first) before writing, unless `--all` was passed — the user's own instruction to skip that ask.
+- Ask before promoting, and before a `--consume` makes an incoming copy the current version of a slug this workspace already holds — both change durable state someone already chose to keep or rely on. A local `--export` writing an `improved` version does **not** ask: it adds a copy and destroys nothing, and the five outcomes are reported. On `--export`, propose the split with `AskUserQuestion` (recommending "write every candidate" first) before writing, unless `--all` was passed — the user's own instruction to skip that ask *and* to hold the qualifying bar loosely, writing a marginal candidate rather than dropping it.
 - Never edit, overwrite or delete an existing copy of a slug. An improvement is a new complete copy in this run's folder; history is immutable.
 - Never write an Understanding in must/never language.
 - Never let an Understanding contradict a rule without flagging it.
@@ -428,4 +452,5 @@ Propose the promotion; the user decides. Once promoted, the Understanding record
 | 2026-09-19 | Subject folder gained a `-yyyyMMdd-HHmm` creation stamp (LADR-007). Reuse the existing stamped folder for work already in the store; mint a new one only for genuinely new work. `_unfiled` stays unstamped. | |
 | 2026-09-19 | Publish is a zip under `.context/understandings-publish/`, consume takes a local zip (LADR-008); the tracked destination and the `ai-asset-sync` route are gone. Stamp is UTC. Export lists the store before choosing a folder; consume merges an already-present slug into its local folder. | |
 | 2026-09-19 | `--path` added as the one target-override switch for `--export`/`--publish`/`--consume`, replacing ad-hoc destination language; a specified destination is now the approval, so Guardrails and the Publish/Consume sections no longer ask before writing to a default or `--path` location — only merge and promote still ask. `--export`'s pre-write cut is an `AskUserQuestion` (write-everything recommended first) rather than a prose list. Deterministic-phrasing line added to Language. | |
+| 2026-09-20 | **LADR-011: `--all` means breadth, not only silence.** It waives the user's cut *and* loosens the qualifying bar, so a marginal candidate is written rather than dropped. The qualifying test separates a decision already recorded elsewhere from the reusable reasoning behind it, which that record has no claim on. The reconcile step gained a fifth outcome, `has another home`, reported with the path of the file that holds the knowledge. | |
 | 2026-09-19 | **LADR-010: a slug is a version key, not a unique name.** An export run writes its own stamped folder holding only that run's output; an improved unit is re-written in full into it carrying `provenance.supersedes`; previous copies are immutable, unlisted and exempt from validation; `INDEX.md` shows the newest version of each slug. `duplicate_slugs` retired. Export gained the reconcile step (read `INDEX.md` first, four outcomes, generous same-question test, `provenance.inherited` from what it read); import gained the newer-wins precedence rule; consume treats an incoming duplicate as a version. | |
